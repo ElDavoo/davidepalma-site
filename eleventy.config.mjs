@@ -9,6 +9,8 @@
 import path from 'node:path'
 import { contentSources } from './src/sources.mjs'
 import { copyContentAssets, copyUsedTwemoji } from './src/assets.mjs'
+import { devMiddleware } from './src/dev-middleware.mjs'
+import { DEFAULT_LOCALE, LOCALES } from './src/config.mjs'
 
 const ROOT = import.meta.dirname
 
@@ -40,9 +42,21 @@ export default function (eleventyConfig) {
   eleventyConfig.addWatchTarget('./templates/')
   eleventyConfig.addWatchTarget('./src/')
 
+  // The dev server must resolve URLs the way the production server does, or a
+  // link that works locally would 404 in production (and vice versa).
   eleventyConfig.setServerOptions({
     port: Number(process.env.PORT) || 8080,
-    showAllHosts: false
+    showAllHosts: false,
+    middleware: [
+      devMiddleware({
+        outputDir: path.join(ROOT, '_site'),
+        defaultLocale: DEFAULT_LOCALE,
+        locales: LOCALES,
+        // tools/dev.mjs sets this to a real Go server, so dev search is the
+        // implementation that ships rather than a lookalike.
+        searchUrl: process.env.DEV_SEARCH_URL || null
+      })
+    ]
   })
 
   return {

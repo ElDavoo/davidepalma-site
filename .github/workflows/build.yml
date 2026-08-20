@@ -1,0 +1,203 @@
+# Build, verify and publish the site image.
+#
+# The Eleventy build happens here rather than in the Dockerfile because it needs
+# two things a docker build cannot easily reach: a Kroki server to render
+# diagrams, and checkouts of both content repositories.
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  # Both content repositories fire this when their markdown changes.
+  repository_dispatch:
+    types: [content-updated]
+  # A daily rebuild keeps the image fresh even if a dispatch is ever missed.
+  schedule:
+    - cron: '17 4 * * *'
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    services:
+      # Kroki renders graphviz, plantuml, bytefield and friends itself, and
+      # delegates mermaid to a companion container. Running our own instance
+      # keeps the build independent of kroki.io -- whose public mermaid backend
+      # is intermittently down -- and means no reader ever contacts a third
+      # party for a diagram.
+      kroki:
+        image: yuzutech/kroki:latest
+        env:
+          KROKI_MERMAID_HOST: mermaid
+          KROKI_MERMAID_PORT: 8002
+        ports: ['8000:8000']
+      mermaid:
+        image: yuzutech/kroki-mermaid:latest
+        ports: ['8002:8002']
+
+    steps:
+      - name: Check out the generator
+        uses: actions/checkout@v4
+        with:
+          path: davidepalma-site
+
+      - name: Check out public content
+        uses: actions/checkout@v4
+        with:
+          repository: ElDavoo/wikijs-content
+          path: wikijs-content
+
+      - name: Check out private content
+        uses: actions/checkout@v4
+        with:
+          repository: ElDavoo/wiki-content-private
+          token: ${{ secrets.CONTENT_TOKEN }}
+          path: wiki-content-private
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: davidepalma-site/package-lock.json
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+          cache-dependency-path: davidepalma-site/server/go.sum
+
+      - run: npm ci
+        working-directory: davidepalma-site
+
+      # Diagrams are rendered once and cached by content hash, so an unchanged
+      # diagram costs nothing on later builds.
+      - name: Restore diagram cache
+        uses: actions/cache@v4
+        with:
+          path: davidepalma-site/.cache/diagrams
+          key: diagrams-${{ hashFiles('wikijs-content/**/*.md', 'wiki-content-private/**/*.md') }}
+          restore-keys: diagrams-
+
+      - name: Wait for Kroki
+        run: |
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:8000/ >/dev/null; then echo "kroki up"; exit 0; fi
+            sleep 2
+          done
+          echo "kroki did not become ready" >&2
+          exit 1
+
+      - name: Check mermaid rendering works
+        # Fail fast and legibly here rather than deep inside the site build:
+        # mermaid is the one diagram type that needs the companion container.
+        run: |
+          printf 'graph TD\n  A[Start] --> B[End]\n' > /tmp/m.mmd
+          code=$(curl -s -o /tmp/m.svg -w '%{http_code}' --max-time 60 \
+            -X POST -H 'Content-Type: text/plain' --data-binary @/tmp/m.mmd \
+            http://localhost:8000/mermaid/svg)
+          echo "mermaid -> HTTP $code, $(wc -c < /tmp/m.svg) bytes"
+          test "$code" = "200"
+          grep -q '<svg' /tmp/m.svg
+
+      - name: Rendering parity against the wiki's own output
+        working-directory: davidepalma-site
+        run: npm run parity
+
+      - name: Build the site
+        working-directory: davidepalma-site
+        env:
+          NODE_ENV: production
+          KROKI_SERVER: http://localhost:8000
+          DIAGRAMS_STRICT: '1'
+          CONTENT_PUBLIC: ${{ github.workspace }}/wikijs-content
+          CONTENT_PRIVATE: ${{ github.workspace }}/wiki-content-private
+          UNLISTED_SALT: ${{ secrets.UNLISTED_SALT }}
+        run: npm run build
+
+      - name: Assert no client-side JavaScript
+        working-directory: davidepalma-site
+        run: node tools/check-no-js.mjs _site
+
+      - name: Assert every diagram rendered
+        working-directory: davidepalma-site
+        # DIAGRAMS_STRICT should already have failed the build, so this is a
+        # backstop against the error placeholder reaching the image.
+        run: |
+          if grep -rq 'diagram-error' _site --include='*.html'; then
+            echo "a diagram fell back to its source" >&2
+            grep -rl 'diagram-error' _site --include='*.html' >&2
+            exit 1
+          fi
+          echo "inlined SVG diagrams: $(grep -rlo 'class="diagram diagram-' _site --include='*.html' | wc -l) page(s)"
+
+      - name: Check internal links
+        working-directory: davidepalma-site
+        # Warn-only: the wiki ships with pre-existing dead links and a missing
+        # image, and a build should not fail on content defects it inherited.
+        run: node tools/check-links.mjs _site --warn
+
+      - name: Go tests
+        working-directory: davidepalma-site/server
+        run: go test ./...
+
+      - name: End-to-end verification
+        working-directory: davidepalma-site
+        run: node tools/verify.mjs
+
+      - name: Stage the image payload
+        working-directory: davidepalma-site
+        run: node tools/stage-dist.mjs --in _site --out dist
+
+      - name: Check the unlisted URLs are stable across rebuilds
+        working-directory: davidepalma-site
+        env:
+          KROKI_SERVER: http://localhost:8000
+          CONTENT_PUBLIC: ${{ github.workspace }}/wikijs-content
+          CONTENT_PRIVATE: ${{ github.workspace }}/wiki-content-private
+          UNLISTED_SALT: ${{ secrets.UNLISTED_SALT }}
+        # An unlisted URL that changed between builds would break every link
+        # anyone has been given, so this is checked rather than assumed.
+        run: |
+          jq -S '[.pages[] | select(.tier == "unlisted") | .url]' dist/data/manifest.json > /tmp/unlisted-1.json
+          npm run build >/dev/null
+          jq -S '[.pages[] | select(.tier == "unlisted") | .url]' _site/manifest.json > /tmp/unlisted-2.json
+          diff /tmp/unlisted-1.json /tmp/unlisted-2.json
+          echo "unlisted URLs stable: $(jq length /tmp/unlisted-1.json) page(s)"
+
+      - name: Log in to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/setup-buildx-action@v3
+        if: github.event_name != 'pull_request'
+
+      - name: Build and push the image
+        if: github.event_name != 'pull_request'
+        uses: docker/build-push-action@v6
+        with:
+          context: davidepalma-site
+          file: davidepalma-site/Dockerfile
+          # The Pi is arm64; amd64 is there so the image can be run locally.
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

@@ -6,9 +6,14 @@
   "description": "Static, zero-client-JavaScript replacement for the WikiJS site at www.davidepalma.it",
   "scripts": {
     "build": "eleventy",
-    "dev": "eleventy --serve",
+    "dev": "node tools/dev.mjs",
     "export": "node tools/export-wikijs.mjs --out export",
-    "parity": "node tools/parity-check.mjs"
+    "parity": "node tools/parity-check.mjs",
+    "stage": "node tools/stage-dist.mjs --in _site --out dist",
+    "check:nojs": "node tools/check-no-js.mjs _site",
+    "check:links": "node tools/check-links.mjs _site",
+    "verify": "node tools/verify.mjs",
+    "test": "npm run parity && npm run check:nojs && npm run verify"
   },
   "dependencies": {
     "@11ty/eleventy": "3.1.2",
