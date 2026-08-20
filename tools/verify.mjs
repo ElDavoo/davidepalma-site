@@ -24,10 +24,28 @@ const externalBase = baseIdx > -1 ? process.argv[baseIdx + 1] : null
 let passed = 0
 const failures = []
 
+/**
+ * Protected URLs must not appear in output.
+ *
+ * This runs in CI on a public repository, so anything printed here is public.
+ * An unlisted URL printed into a build log stops being unlisted, and a private
+ * one tells a reader exactly what to go and try. Failure details name the tier
+ * and the reason, which is what you need to debug, without the address.
+ */
+const redactions = []
+function redact (text) {
+  let out = String(text ?? '')
+  for (const [needle, replacement] of redactions) {
+    out = out.split(needle).join(replacement)
+  }
+  return out
+}
+
 function check (name, ok, detail = '') {
-  if (ok) { passed++; console.log(`  ok    ${name}`) } else {
-    failures.push(`${name}${detail ? ` — ${detail}` : ''}`)
-    console.log(`  FAIL  ${name}${detail ? ` — ${detail}` : ''}`)
+  const line = `${redact(name)}${detail ? ` — ${redact(detail)}` : ''}`
+  if (ok) { passed++; console.log(`  ok    ${line}`) } else {
+    failures.push(line)
+    console.log(`  FAIL  ${line}`)
   }
 }
 
@@ -69,6 +87,12 @@ async function main () {
   }
 
   const manifest = JSON.parse(await fs.readFile(path.join(ROOT, '_site/manifest.json'), 'utf8'))
+
+  // Longest first, so /it/private/a/b is masked before /it/private.
+  for (const page of manifest.pages.filter(p => p.tier !== 'public').sort((a, b) => b.url.length - a.url.length)) {
+    redactions.push([page.url, `<${page.tier} page>`])
+    if (page.title) { redactions.push([page.title, `<${page.tier} title>`]) }
+  }
 
   // ---- URL parity: nothing the old wiki published may 404 ----
   console.log('\nURL parity (every URL the live wiki serves)')

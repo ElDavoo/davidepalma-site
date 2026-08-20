@@ -8,18 +8,23 @@
  *
  * Reaches Postgres through ssh + `docker exec psql`, which is how the Pi exposes it.
  *
- *   node tools/export-wikijs.mjs [--out DIR]
+ *   WIKIJS_SSH_HOST=user@host node tools/export-wikijs.mjs [--out DIR]
  *
- * Env overrides: WIKIJS_SSH_HOST, WIKIJS_PG_CONTAINER, WIKIJS_PG_USER, WIKIJS_PG_DB
+ * Env: WIKIJS_SSH_HOST (required), WIKIJS_PG_CONTAINER, WIKIJS_PG_USER, WIKIJS_PG_DB
  */
 import { spawn } from 'node:child_process'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-const SSH_HOST = process.env.WIKIJS_SSH_HOST || 'user@wiki-host.example'
+const SSH_HOST = process.env.WIKIJS_SSH_HOST
 const CONTAINER = process.env.WIKIJS_PG_CONTAINER || 'docker-postgres-1'
 const PG_USER = process.env.WIKIJS_PG_USER || 'wikijs'
 const PG_DB = process.env.WIKIJS_PG_DB || 'wikijs'
+
+if (!SSH_HOST) {
+  console.error('Set WIKIJS_SSH_HOST (user@host of the machine running the wiki\'s Postgres).')
+  process.exit(2)
+}
 
 const outArg = process.argv.indexOf('--out')
 const OUT = path.resolve(outArg > -1 ? process.argv[outArg + 1] : 'export')

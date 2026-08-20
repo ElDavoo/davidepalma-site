@@ -73,6 +73,11 @@ export async function loadPages (sources, opts = {}) {
   const pages = []
   const problems = []
 
+  // Build logs are public. A warning about a file in the private repository
+  // should say which repository and what is wrong, not publish the filename.
+  const describe = (source, rel) =>
+    source.defaultTier === 'public' ? `${source.name}: ${rel}` : `${source.name}: <a file in the private repository>`
+
   for (const source of sources) {
     const files = await walk(source.dir)
 
@@ -84,7 +89,7 @@ export async function loadPages (sources, opts = {}) {
         // Repo furniture at the root is expected; anything else up there is
         // probably a page filed in the wrong place and worth saying so.
         if (parts.length > 1 || !REPO_FURNITURE.has(entry_basename(rel))) {
-          problems.push(`${source.name}: ${rel} is not under a known locale directory (${LOCALES.join(', ')})`)
+          problems.push(`${describe(source, rel)} is not under a known locale directory (${LOCALES.join(', ')})`)
         }
         continue
       }
@@ -106,7 +111,7 @@ export async function loadPages (sources, opts = {}) {
       // rendering an inert HTML comment.
       if (/<!--\s*\{[^}]*\}\s*-->/.test(content)) {
         problems.push(
-          `${source.name}: ${rel} uses markdown-it-decorate syntax (<!-- {...} -->), which is not supported. ` +
+          `${describe(source, rel)} uses markdown-it-decorate syntax (<!-- {...} -->), which is not supported. ` +
           'Use a trailing {.class} attribute block instead.'
         )
       }
@@ -115,7 +120,7 @@ export async function loadPages (sources, opts = {}) {
       let tier = data.access ?? source.defaultTier
       if (!allowed.includes(tier)) {
         problems.push(
-          `${source.name}: ${rel} declares access: ${tier}, which the ${source.defaultTier} repository cannot grant ` +
+          `${describe(source, rel)} declares access: ${tier}, which the ${source.defaultTier} repository cannot grant ` +
           `(allowed: ${allowed.join(', ')}). Falling back to ${source.defaultTier}.`
         )
         tier = source.defaultTier
@@ -153,7 +158,11 @@ export async function loadPages (sources, opts = {}) {
   const byUrl = new Map()
   for (const page of pages) {
     if (byUrl.has(page.url)) {
-      problems.push(`duplicate URL ${page.url}: ${byUrl.get(page.url).file} and ${page.file}`)
+      // Names the tier, not the URL: a duplicate involving an unlisted page
+      // would otherwise print its unguessable address into a public log.
+      problems.push(page.tier === 'public'
+        ? `duplicate URL ${page.url}: ${byUrl.get(page.url).file} and ${page.file}`
+        : `duplicate URL between two ${page.tier} pages in ${page.locale}`)
     }
     byUrl.set(page.url, page)
   }

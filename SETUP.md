@@ -16,12 +16,9 @@ segment = base32( HMAC-SHA256(UNLISTED_SALT, "{locale}:{path}") )[0..8]
 ```
 
 Lose it and every unlisted link anyone has ever been given stops working, all at
-once. Put it in your password manager. A copy was written to this session's
-scratchpad — a temporary directory, so move it before it is cleaned up:
+once. Keep it in a password manager.
 
-```
-/tmp/claude-1000/-home-dave-git/c1ad2699-352b-4516-a4d4-3eeed087f45b/scratchpad/unlisted-salt.txt
-```
+If you ever need to change it, expect every unlisted URL to change with it.
 
 ## 2. `CONTENT_TOKEN` — lets CI read the private content repo
 

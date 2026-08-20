@@ -16,6 +16,23 @@ import * as cheerio from 'cheerio'
 const SITE = path.resolve(process.argv[2] && !process.argv[2].startsWith('--') ? process.argv[2] : '_site')
 const warnOnly = process.argv.includes('--warn')
 
+/**
+ * --redact-protected replaces private, secret and unlisted paths in the output
+ * with a tier label. CI runs on a public repository, so its logs are public, and
+ * a broken link inside a protected page would otherwise publish that page's
+ * address. The tier and the reason are still reported.
+ */
+const redactProtected = process.argv.includes('--redact-protected')
+let redact = (s) => s
+if (redactProtected) {
+  const manifest = JSON.parse(await fs.readFile(path.join(SITE, 'manifest.json'), 'utf8'))
+  const rules = manifest.pages
+    .filter(p => p.tier !== 'public')
+    .sort((a, b) => b.url.length - a.url.length)
+    .map(p => [p.url, `<${p.tier} page>`])
+  redact = (text) => rules.reduce((acc, [from, to]) => acc.split(from).join(to), String(text))
+}
+
 async function* walk (dir) {
   for (const entry of await fs.readdir(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name)
@@ -93,7 +110,7 @@ for (const file of htmlFiles) {
 }
 
 if (problems.length) {
-  const unique = [...new Set(problems)].sort()
+  const unique = [...new Set(problems.map(redact))].sort()
   console[warnOnly ? 'warn' : 'error'](`${warnOnly ? 'WARN' : 'FAIL'} — ${unique.length} broken link(s):`)
   for (const p of unique) { console[warnOnly ? 'warn' : 'error'](`  ${p}`) }
   if (!warnOnly) { process.exit(1) }

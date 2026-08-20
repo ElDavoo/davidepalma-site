@@ -131,6 +131,32 @@ cd server && go test ./...
 CI runs all of these, plus a check that unlisted URLs are byte-stable across two
 consecutive builds.
 
+## This repository is public. The content is not.
+
+Only the generator lives here. Nothing in this repository is secret, and CI is
+built so that nothing secret ends up in a public build log or artifact:
+
+- **Build output is quiet.** Eleventy is run with `--quiet`, because it otherwise
+  logs the path of every file it writes — which would list every private and
+  secret page.
+- **Unlisted URLs are compared by digest, never printed.** An unlisted URL in a
+  public log is an unlisted URL no longer.
+- **Failure output is redacted.** `tools/verify.mjs` and
+  `tools/check-links.mjs --redact-protected` replace protected paths and titles
+  with a tier label, so a broken link inside a private page is still reported —
+  as `<private page>: link -> …` — without publishing its address.
+- **Warnings name the repository, not the file.** A problem with a file in the
+  private content repo is reported without the filename.
+- **The workflow artifact is public pages only**, staged by deleting the
+  protected trees and then *verifying against the manifest* that none survived.
+  Artifacts on a public repository are downloadable by anyone.
+- **The image stays private.** It contains all four tiers; the GHCR package must
+  not be made public.
+
+The unlisted-URL scheme is published here in full, deliberately. Its security
+rests on `UNLISTED_SALT`, which is a repository secret — not on the algorithm
+being unknown.
+
 ## Content
 
 Two repositories, because gating applies to published pages, not to git history:

@@ -5,21 +5,27 @@ behind SWAG. Nothing else on the Pi changes.
 
 ## Before you start
 
-**The SD card is full.** At the time of writing `/` was at 100% with ~466 MB
-free, and Docker's root directory is `/var/lib/docker` on that same card. The
-site image is small (distroless plus a couple of megabytes of content, so tens
-of megabytes), and it will fit — but there is no room for a mistake, and a
-`docker pull` that fills the card will take the rest of the stack down with it.
-Free some space first:
+**Check the disk first.** Docker's root is on the SD card, and a `docker pull`
+that fills it takes the rest of the stack down with it. The site image is small
+— distroless plus a couple of megabytes of content, around 12 MB — but check
+there is headroom:
 
 ```bash
-docker image prune -a          # unused images
-docker builder prune           # build cache
-journalctl --vacuum-size=100M
+df -h /
+docker system df
 ```
 
-Retiring `requarks/wiki:2` after cutover recovers a few hundred megabytes on its
-own.
+If it is tight, these two are safe: they delete only build cache and *untagged*
+images, so nothing you are running or might run again is affected.
+
+```bash
+docker builder prune -af
+docker image prune -f          # dangling only — NOT -a
+```
+
+Avoid `docker image prune -a`: it removes every image without a container,
+including ones for services you start occasionally. Retiring `requarks/wiki:2`
+after cutover recovers a few hundred megabytes on its own.
 
 ## One-time setup
 

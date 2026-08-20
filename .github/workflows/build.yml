@@ -89,7 +89,10 @@ jobs:
             echo "private content: $(find wiki-content-private -name '*.md' -not -path '*/.*' | wc -l) file(s)"
             exit 0
           fi
-          if [ "${{ vars.ALLOW_MISSING_PRIVATE }}" = "true" ]; then
+          # A pull request from a fork gets no secrets, so it cannot check out
+          # private content -- and it never pushes an image, so the failure this
+          # guard exists to prevent cannot happen there.
+          if [ "${{ github.event_name }}" = "pull_request" ] || [ "${{ vars.ALLOW_MISSING_PRIVATE }}" = "true" ]; then
             echo "::warning::Building WITHOUT private content (ALLOW_MISSING_PRIVATE is set). Private and secret pages will be absent from this image."
             mkdir -p wiki-content-private
             exit 0
@@ -159,7 +162,9 @@ jobs:
           CONTENT_PUBLIC: ${{ github.workspace }}/wikijs-content
           CONTENT_PRIVATE: ${{ github.workspace }}/wiki-content-private
           UNLISTED_SALT: ${{ secrets.UNLISTED_SALT }}
-        run: npm run build
+        # --quiet: Eleventy otherwise logs the path of every file it writes,
+        # which in a public log would list every private and secret page.
+        run: npm run build -- --quiet
 
       - name: Assert no client-side JavaScript
         working-directory: davidepalma-site
@@ -181,7 +186,8 @@ jobs:
         working-directory: davidepalma-site
         # Warn-only: the wiki ships with pre-existing dead links and a missing
         # image, and a build should not fail on content defects it inherited.
-        run: node tools/check-links.mjs _site --warn
+        # --redact-protected keeps protected page paths out of a public log.
+        run: node tools/check-links.mjs _site --warn --redact-protected
 
       - name: Go tests
         working-directory: davidepalma-site/server
@@ -204,20 +210,47 @@ jobs:
           UNLISTED_SALT: ${{ secrets.UNLISTED_SALT }}
         # An unlisted URL that changed between builds would break every link
         # anyone has been given, so this is checked rather than assumed.
+        # Compares digests, never the URLs themselves: an unlisted URL printed
+        # into a public build log is an unlisted URL no longer.
         run: |
-          jq -S '[.pages[] | select(.tier == "unlisted") | .url]' dist/data/manifest.json > /tmp/unlisted-1.json
-          npm run build >/dev/null
-          jq -S '[.pages[] | select(.tier == "unlisted") | .url]' _site/manifest.json > /tmp/unlisted-2.json
-          diff /tmp/unlisted-1.json /tmp/unlisted-2.json
-          echo "unlisted URLs stable: $(jq length /tmp/unlisted-1.json) page(s)"
+          before=$(jq -Sc '[.pages[] | select(.tier == "unlisted") | .url]' dist/data/manifest.json | sha256sum)
+          count=$(jq '[.pages[] | select(.tier == "unlisted")] | length' dist/data/manifest.json)
+          npm run build -- --quiet >/dev/null
+          after=$(jq -Sc '[.pages[] | select(.tier == "unlisted") | .url]' _site/manifest.json | sha256sum)
+          if [ "$before" != "$after" ]; then
+            echo "::error::unlisted URLs changed between two builds of the same content; every shared link would break"
+            exit 1
+          fi
+          echo "unlisted URLs stable across rebuilds: $count page(s)"
+
+      - name: Stage a publishable copy of the build
+        working-directory: davidepalma-site
+        # This repository is public, so workflow artifacts are downloadable by
+        # anyone. dist/ holds every tier, and dist/data/manifest.json names every
+        # private, secret and unlisted URL. Publish the public pages only.
+        run: |
+          rm -rf artifact
+          cp -r dist/site artifact
+          rm -rf artifact/secret artifact/private
+          for locale in $(jq -r '.locales[]' dist/data/manifest.json); do
+            rm -rf "artifact/$locale/private" "artifact/$locale/secret" "artifact/$locale/u"
+          done
+          # Fail rather than upload if anything protected survived.
+          if jq -r '.pages[] | select(.tier != "public") | .file' dist/data/manifest.json \
+             | while read -r f; do [ -e "artifact/$f" ] && echo "$f"; done | grep -q .; then
+            echo "::error::a protected page survived staging; refusing to upload"
+            exit 1
+          fi
+          echo "artifact: $(find artifact -type f | wc -l) public file(s)"
 
       - name: Upload the built site
-        # Handy for inspecting exactly what shipped, and the only way to see the
-        # mermaid diagrams rendered if your machine has no container runtime.
+        # Public pages only -- see the staging step above. Enough to inspect what
+        # shipped, including the mermaid diagrams, without publishing any tier
+        # that is meant to be gated.
         uses: actions/upload-artifact@v7
         with:
-          name: site
-          path: davidepalma-site/dist
+          name: site-public
+          path: davidepalma-site/artifact
           retention-days: 14
 
       - name: Log in to GHCR
