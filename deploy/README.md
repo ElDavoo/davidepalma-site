@@ -123,6 +123,28 @@ docker compose up -d wiki
 docker compose restart nginx
 ```
 
+## Cloudflare injects JavaScript — turn it off
+
+Cloudflare's bot detection adds
+`/cdn-cgi/challenge-platform/scripts/jsd/main.js` to **every** HTML response.
+The container serves zero `<script>` tags; this is added at the edge, and it
+defeats the point of a no-JavaScript site.
+
+It is additive rather than blocking — the page still renders with JavaScript
+disabled — but to actually ship no script, turn it off in the Cloudflare
+dashboard for `davidepalma.it`:
+
+- **Security → Bots → JavaScript Detections** — off
+- Check **Bot Fight Mode** too; it enables the same injection
+- **Speed → Optimization → Rocket Loader** must also be off (it rewrites scripts
+  and would inject its own)
+
+Verify with:
+
+```bash
+curl -s https://www.davidepalma.it/it/home | grep -c '<script'   # want 0
+```
+
 ## After you are satisfied
 
 1. `docker compose stop wiki` and remove the service.
