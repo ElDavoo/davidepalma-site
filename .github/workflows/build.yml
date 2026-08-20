@@ -95,7 +95,7 @@ jobs:
           echo "::error::Private content is missing. Set the CONTENT_TOKEN secret, or set the repository variable ALLOW_MISSING_PRIVATE=true to build without it."
           exit 1
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
           cache: npm
