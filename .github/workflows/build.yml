@@ -267,6 +267,13 @@ jobs:
       - name: Build and push the image
         if: github.event_name != 'pull_request'
         uses: docker/build-push-action@v7
+        env:
+          # buildx otherwise uploads a build record artifact. Inspected once and
+          # it carries no page content -- but it is an artifact on a public
+          # repository whose shape is buildx's to change, and nothing here needs
+          # it. Fewer things to re-audit on the next buildx bump.
+          DOCKER_BUILD_RECORD_UPLOAD: false
+          DOCKER_BUILD_SUMMARY: false
         with:
           context: davidepalma-site
           file: davidepalma-site/Dockerfile
