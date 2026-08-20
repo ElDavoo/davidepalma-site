@@ -22,7 +22,7 @@
     "gray-matter": "4.0.3",
     "highlight.js": "^11.12.0",
     "katex": "0.12.0",
-    "lodash": "4.17.21",
+    "lodash": "4.18.1",
     "markdown-it": "11.0.1",
     "markdown-it-abbr": "1.0.4",
     "markdown-it-attrs": "3.0.3",
