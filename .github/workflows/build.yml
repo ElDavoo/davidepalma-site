@@ -211,6 +211,15 @@ jobs:
           diff /tmp/unlisted-1.json /tmp/unlisted-2.json
           echo "unlisted URLs stable: $(jq length /tmp/unlisted-1.json) page(s)"
 
+      - name: Upload the built site
+        # Handy for inspecting exactly what shipped, and the only way to see the
+        # mermaid diagrams rendered if your machine has no container runtime.
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: davidepalma-site/dist
+          retention-days: 14
+
       - name: Log in to GHCR
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v3
