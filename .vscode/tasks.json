@@ -1,0 +1,38 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "dev: watch and preview",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": { "cwd": "${workspaceFolder:site (generator)}" },
+      "isBackground": true,
+      "group": { "kind": "build", "isDefault": true },
+      "presentation": { "reveal": "always", "panel": "dedicated" },
+      "problemMatcher": {
+        "owner": "eleventy",
+        "pattern": { "regexp": "^\\[11ty\\] (.*)$", "message": 1 },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Watching",
+          "endsPattern": "Wrote \\d+ files"
+        }
+      }
+    },
+    {
+      "label": "verify (parity, no-JS, links, server)",
+      "type": "shell",
+      "command": "npm run parity && npm run check:nojs && node tools/check-links.mjs _site --warn && npm run verify",
+      "options": { "cwd": "${workspaceFolder:site (generator)}" },
+      "group": "test",
+      "presentation": { "reveal": "always" }
+    },
+    {
+      "label": "build (production settings)",
+      "type": "shell",
+      "command": "NODE_ENV=production DIAGRAMS_STRICT=1 npm run build",
+      "options": { "cwd": "${workspaceFolder:site (generator)}" },
+      "group": "build"
+    }
+  ]
+}

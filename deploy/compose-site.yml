@@ -1,0 +1,32 @@
+## The service block to add to ~/docker/docker-compose.yml.
+##
+## Styled after the existing `wiki` service: same restart policy, the same
+## blkio throttling on the SD card, and pull_policy: always so the cron deploy
+## below picks up a new image.
+##
+## Note the resource limits are far lower than wiki's 250M. The server holds the
+## search index in memory and serves static files; there is no Node runtime and
+## no database connection.
+
+  site:
+    image: ghcr.io/eldavoo/davidepalma-site:latest
+    restart: always
+    pull_policy: always
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 64M
+    blkio_config:
+      device_write_bps:
+        - path: /dev/mmcblk0
+          rate: '1mb'
+      device_read_bps:
+        - path: /dev/mmcblk0
+          rate: '3mb'
+    networks:
+      - nginx-wiki
+
+## Keep the `wiki` and `postgres` services defined but stopped until the cutover
+## is confirmed. Rolling back is then a one-line change to `location /` plus
+## `docker compose up -d wiki`.
