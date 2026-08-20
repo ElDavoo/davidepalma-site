@@ -141,6 +141,11 @@ jobs:
 
       - name: Rendering parity against the wiki's own output
         working-directory: davidepalma-site
+        env:
+          # Check the markdown the site is actually built from, not the
+          # migration snapshot (which is gitignored and only exists locally).
+          CONTENT_PUBLIC: ${{ github.workspace }}/wikijs-content
+          CONTENT_PRIVATE: ${{ github.workspace }}/wiki-content-private
         run: npm run parity
 
       - name: Build the site

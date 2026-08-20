@@ -1,0 +1,50 @@
+# The markdown pipeline is version-pinned on purpose.
+#
+# This site's whole premise is that it renders byte-identically to what wiki.js
+# serves today, and tools/parity-check.mjs proves that against wiki.js's own
+# stored output. Those versions ARE the specification: bumping them changes the
+# rendering.
+#
+# Measured, not assumed. On markdown-it 15 / KaTeX 0.18:
+#   - it/home loses a link: markdown-it 11 linkifies the bare domain
+#     "davidepalma.it", markdown-it 15 does not.
+#   - it/test differs in six places: KaTeX emits different markup for the same
+#     mathematics.
+#
+# The security trade-off is deliberate and the exposure is nil: these libraries
+# run at BUILD time, in CI, over markdown from two repositories the owner
+# controls. There is no path by which an attacker supplies input to them. (And
+# markdownCore has allowHTML: true, so anyone who could write to those
+# repositories could inject HTML directly regardless of library version.)
+#
+# Revisit if that ever stops being true -- if content becomes writable by anyone
+# else, or if the pipeline is ever pointed at input the owner does not control.
+# The upgrade path is to bump, re-run `npm run parity`, and decide whether each
+# rendering change is acceptable.
+#
+# Everything else is still watched: the Go module, the Actions, and the npm
+# packages that do not affect rendering.
+
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    ignore:
+      - dependency-name: markdown-it
+      - dependency-name: markdown-it-*
+      - dependency-name: katex
+      - dependency-name: cheerio
+      - dependency-name: uslug
+      - dependency-name: twemoji
+
+  - package-ecosystem: gomod
+    directory: /server
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

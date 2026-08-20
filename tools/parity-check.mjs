@@ -18,6 +18,7 @@ import * as cheerio from 'cheerio'
 import { renderMarkdown } from '../src/markdown/pipeline.mjs'
 import { renderHtmlCore } from '../src/postprocess/html-core.mjs'
 import { wikijsChildren } from '../src/postprocess/children-wikijs.mjs'
+import { contentSources } from '../src/sources.mjs'
 
 const ROOT = path.resolve(import.meta.dirname, '..')
 const EXPORT = path.join(ROOT, 'export')
@@ -72,6 +73,28 @@ function chunks (html) {
   return normalise(html).split(/(?=<(?:h[1-6]|p|div|ul|ol|pre|blockquote|table|img|tabset|hr)[ >])/)
 }
 
+/**
+ * Where to read a page's markdown.
+ *
+ * Prefer the content repository: that is the file the site is actually built
+ * from, so checking it proves the *shipping* source still renders identically.
+ * export/content is the migration snapshot and only exists locally -- it is
+ * gitignored, because the markdown belongs in the content repos, not here.
+ */
+async function sourceFor (page) {
+  const candidates = [
+    ...contentSources(ROOT).map(s => path.join(s.dir, page.locale, `${page.path}.md`)),
+    path.join(EXPORT, page.source)
+  ]
+  for (const candidate of candidates) {
+    try {
+      await fs.access(candidate)
+      return candidate
+    } catch { /* try the next */ }
+  }
+  throw new Error(`no markdown found for ${page.locale}/${page.path}; tried:\n  ${candidates.join('\n  ')}`)
+}
+
 async function main () {
   const manifest = JSON.parse(await fs.readFile(path.join(EXPORT, 'manifest.json'), 'utf8'))
   const knownPages = new Set(manifest.pages.map(p => `${p.locale}/${p.path}`))
@@ -82,7 +105,7 @@ async function main () {
   for (const page of manifest.pages) {
     if (only && !`${page.locale}/${page.path}`.includes(only)) { continue }
 
-    const raw = await fs.readFile(path.join(EXPORT, page.source), 'utf8')
+    const raw = await fs.readFile(await sourceFor(page), 'utf8')
     const body = raw.replace(/^---\n[\s\S]*?\n---\n\n?/, '')
     const expected = await fs.readFile(path.join(EXPORT, page.fixture), 'utf8')
 
