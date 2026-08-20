@@ -23,7 +23,9 @@ concurrency:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  # Lowercased: github.repository preserves the owner's capitalisation
+  # (ElDavoo), and container tags must be lowercase.
+  IMAGE_NAME: eldavoo/davidepalma-site
 
 jobs:
   build:
