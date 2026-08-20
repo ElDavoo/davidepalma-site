@@ -77,16 +77,36 @@ async function renderDiagram (type, source, opts) {
   } catch { /* not cached yet */ }
 
   const url = `${opts.server.replace(/\/$/, '')}/${type}/svg`
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain' },
-    body: source,
-    signal: AbortSignal.timeout(opts.timeoutMs ?? 30000)
-  })
-  if (!res.ok) {
-    throw new Error(`kroki ${type} -> HTTP ${res.status}: ${(await res.text()).slice(0, 300)}`)
+  const attempts = opts.retries ?? Number(process.env.DIAGRAM_RETRIES ?? 3)
+
+  // Kroki's heavier backends (mermaid runs a headless browser) are slow to warm
+  // up and intermittently 5xx. Retrying beats failing a whole deploy on one
+  // cold start -- but we still fail rather than publish a broken diagram.
+  let svg
+  let lastErr
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: source,
+        signal: AbortSignal.timeout(opts.timeoutMs ?? 30000)
+      })
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}: ${(await res.text()).slice(0, 200)}`)
+      }
+      svg = await res.text()
+      break
+    } catch (err) {
+      lastErr = err
+      if (attempt < attempts) {
+        await new Promise(r => setTimeout(r, 1000 * attempt))
+      }
+    }
   }
-  const svg = await res.text()
+  if (svg === undefined) {
+    throw new Error(`kroki ${type} -> ${lastErr.message} (after ${attempts} attempts)`)
+  }
 
   await fs.mkdir(CACHE_DIR, { recursive: true })
   await fs.writeFile(cacheFile, svg)

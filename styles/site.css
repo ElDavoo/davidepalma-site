@@ -1,0 +1,470 @@
+/*
+ * davidepalma.it — stylesheet
+ *
+ * Dark mode is automatic (prefers-color-scheme), matching the wiki's current
+ * darkMode: true. A *manual* override that persists between pages would need
+ * JavaScript or a cookie round-trip, so under the no-JS rule it is out of scope;
+ * `color-scheme` at least makes form controls and scrollbars follow the theme.
+ */
+
+:root {
+  color-scheme: light dark;
+
+  --bg: #ffffff;
+  --bg-soft: #f5f6f8;
+  --bg-sunken: #eceef2;
+  --fg: #1f2328;
+  --fg-muted: #5b6470;
+  --border: #d5d9e0;
+  --link: #0b62c4;
+  --link-visited: #6b3fa0;
+  --accent: #128a5c;
+  --code-bg: #f5f6f8;
+  --shadow: rgba(15, 20, 30, 0.08);
+
+  --info: #1f74c4;
+  --success: #128a5c;
+  --warning: #a86500;
+  --danger: #c02b2b;
+
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+  --measure: 46rem;
+  --sidebar: 17rem;
+  --toc: 15rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #16191d;
+    --bg-soft: #1d2126;
+    --bg-sunken: #24292f;
+    --fg: #e4e7eb;
+    --fg-muted: #9aa4b0;
+    --border: #333a43;
+    --link: #6cb2ff;
+    --link-visited: #c4a4ec;
+    --accent: #4ec99a;
+    --code-bg: #1d2126;
+    --shadow: rgba(0, 0, 0, 0.4);
+
+    --info: #6cb2ff;
+    --success: #4ec99a;
+    --warning: #e0a44a;
+    --danger: #ef7676;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.65;
+  -webkit-text-size-adjust: 100%;
+}
+
+a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:visited { color: var(--link-visited); }
+a:hover { text-decoration-thickness: 2px; }
+
+:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.skip-link {
+  position: absolute; left: -9999px;
+  background: var(--bg); color: var(--fg);
+  padding: 0.6rem 1rem; z-index: 10;
+  border: 1px solid var(--border); border-radius: 0 0 6px 0;
+}
+.skip-link:focus { left: 0; top: 0; }
+
+.dev-banner {
+  margin: 0; padding: 0.5rem 1rem;
+  background: var(--warning); color: #14181c;
+  font-weight: 600; text-align: center;
+}
+
+/* ---------------------------------------------------------------- header */
+
+.site-header {
+  display: flex; flex-wrap: wrap; gap: 0.75rem 1.25rem;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-soft);
+}
+
+.site-title {
+  font-weight: 700; font-size: 1.05rem;
+  color: var(--fg); text-decoration: none;
+}
+
+.search { display: flex; gap: 0.4rem; flex: 1 1 16rem; max-width: 30rem; }
+.search input[type="search"] {
+  flex: 1; min-width: 0;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--border); border-radius: 6px;
+  background: var(--bg); color: var(--fg); font: inherit;
+}
+.search button {
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--border); border-radius: 6px;
+  background: var(--bg-sunken); color: var(--fg);
+  font: inherit; cursor: pointer;
+}
+.search button:hover { border-color: var(--link); }
+
+.lang ul { display: flex; gap: 0.5rem; list-style: none; margin: 0; padding: 0; }
+.lang li + li::before { content: "·"; color: var(--fg-muted); margin-right: 0.5rem; }
+.lang-current { font-weight: 600; }
+/* No translation exists: the link falls back to that locale's home page. */
+.lang-fallback { opacity: 0.7; font-style: italic; }
+
+/* ---------------------------------------------------------------- layout */
+
+.layout {
+  display: grid;
+  grid-template-columns: var(--sidebar) minmax(0, 1fr);
+  gap: 2rem;
+  max-width: 84rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 4rem;
+}
+
+.sidebar {
+  position: sticky; top: 1rem;
+  align-self: start;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  font-size: 0.925rem;
+}
+
+.content { min-width: 0; }
+.article { max-width: var(--measure); }
+
+@media (max-width: 60rem) {
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  .sidebar { position: static; max-height: none; order: 2; border-top: 1px solid var(--border); padding-top: 1rem; }
+  .content { order: 1; }
+}
+
+/* ------------------------------------------------------------------ tree */
+/*
+ * Nested <details> gives real expand/collapse with no script. Ancestors of the
+ * current page are rendered with `open`, so the reader lands with their place
+ * already revealed.
+ */
+
+.tree-title {
+  font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--fg-muted); margin: 1.25rem 0 0.4rem;
+}
+.tree-section:first-child .tree-title { margin-top: 0; }
+
+.tree, .tree ul { list-style: none; margin: 0; padding: 0; }
+.tree ul { margin-left: 0.75rem; border-left: 1px solid var(--border); padding-left: 0.6rem; }
+
+.tree li { margin: 0.1rem 0; }
+.tree a { display: inline-block; padding: 0.1rem 0; text-decoration: none; }
+.tree a:hover { text-decoration: underline; }
+.tree a[aria-current="page"] { font-weight: 700; color: var(--accent); }
+
+.tree summary {
+  cursor: pointer;
+  padding: 0.1rem 0;
+  border-radius: 4px;
+}
+.tree summary::marker { color: var(--fg-muted); }
+.tree summary:hover { background: var(--bg-soft); }
+
+.sidebar-links { margin-top: 1.5rem; font-size: 0.875rem; }
+
+/* ------------------------------------------------------------------- toc */
+
+.toc {
+  float: right;
+  width: var(--toc);
+  margin: 0 0 1rem 1.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+/* tocPosition is "left" in the wiki's theming settings. */
+.toc { float: left; margin: 0 1.5rem 1rem 0; }
+
+.toc-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--fg-muted); margin: 0 0 0.4rem; }
+.toc ul { list-style: none; margin: 0; padding: 0; }
+.toc a { text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+.toc-level-1 { padding-left: 0.8rem; }
+.toc-level-2 { padding-left: 1.6rem; }
+
+@media (max-width: 48rem) {
+  .toc { float: none; width: auto; margin: 0 0 1.5rem; }
+}
+
+/* -------------------------------------------------------------- article */
+
+.article h1, .article h2, .article h3,
+.article h4, .article h5, .article h6 {
+  line-height: 1.25;
+  margin: 2rem 0 0.75rem;
+  scroll-margin-top: 1rem;
+}
+.article h1 { font-size: 1.9rem; }
+.article h2 { font-size: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; }
+.article h3 { font-size: 1.25rem; }
+.article > :first-child { margin-top: 0; }
+
+/* The ¶ handle html-core prepends to every heading. */
+.toc-anchor {
+  float: left;
+  margin-left: -1em;
+  width: 1em;
+  color: var(--fg-muted);
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+.toc-header:hover .toc-anchor,
+.toc-anchor:focus { opacity: 1; }
+@media (max-width: 48rem) { .toc-anchor { display: none; } }
+
+.article p, .article ul, .article ol { margin: 0.85rem 0; }
+.article img { max-width: 100%; height: auto; }
+.article hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+.article blockquote {
+  margin: 1rem 0;
+  padding: 0.6rem 1rem;
+  border-left: 4px solid var(--border);
+  background: var(--bg-soft);
+  border-radius: 0 6px 6px 0;
+}
+.article blockquote > :first-child { margin-top: 0; }
+.article blockquote > :last-child { margin-bottom: 0; }
+
+/* wiki.js blockquote styles, applied via markdown-it-attrs ({.is-info} etc.) */
+.article blockquote.is-info { border-left-color: var(--info); }
+.article blockquote.is-success { border-left-color: var(--success); }
+.article blockquote.is-warning { border-left-color: var(--warning); }
+.article blockquote.is-danger { border-left-color: var(--danger); }
+
+/* wiki.js list variants */
+.article ul.grid-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+}
+.article ul.grid-list > li {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.6rem 0.8rem;
+}
+.article ul.links-list { list-style: none; padding: 0; }
+.article ul.links-list > li {
+  border-bottom: 1px solid var(--border);
+  padding: 0.6rem 0;
+}
+.article ul.links-list > li > a { font-weight: 600; text-decoration: none; }
+.article ul.links-list em { display: block; font-weight: 400; font-style: normal; color: var(--fg-muted); font-size: 0.9rem; }
+
+.article ul.contains-task-list { list-style: none; padding-left: 0.2rem; }
+.article .task-list-item-checkbox { margin-right: 0.4rem; }
+
+.article kbd {
+  font-family: var(--font-mono); font-size: 0.85em;
+  background: var(--bg-sunken); border: 1px solid var(--border);
+  border-bottom-width: 2px; border-radius: 4px;
+  padding: 0.1em 0.4em;
+}
+
+.article a.is-invalid-page { color: var(--danger); text-decoration-style: dotted; }
+.article a.is-external-link::after {
+  content: "↗";
+  font-size: 0.8em;
+  margin-left: 0.15em;
+  color: var(--fg-muted);
+}
+
+/* ------------------------------------------------------------------ code */
+
+.article code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--code-bg);
+  padding: 0.15em 0.35em;
+  border-radius: 4px;
+}
+.article pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  overflow-x: auto;
+  line-height: 1.5;
+}
+.article pre code { background: none; padding: 0; font-size: 0.875rem; }
+
+/* --------------------------------------------------------------- tables */
+
+.table-container { overflow-x: auto; margin: 1rem 0; }
+.article table { border-collapse: collapse; width: 100%; }
+.article th, .article td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; text-align: left; }
+.article thead th { background: var(--bg-soft); }
+.article tbody tr:nth-child(even) { background: var(--bg-soft); }
+
+/* -------------------------------------------------------------- tabsets */
+/*
+ * CSS-only tabs. The radios are the state; labels are the affordance; the
+ * general-sibling combinator reveals the matching panel. Radios sharing a name
+ * are arrow-key navigable natively, so this stays keyboard-usable with no script.
+ */
+
+.tabset {
+  margin: 1.25rem 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tabset > .tabset-radio {
+  position: absolute;
+  width: 1px; height: 1px;
+  opacity: 0;
+  /* Kept in flow (not display:none) so it stays focusable and arrow-navigable. */
+}
+
+.tabset > .tabset-label {
+  display: inline-block;
+  padding: 0.55rem 1rem;
+  cursor: pointer;
+  background: var(--bg-soft);
+  border-bottom: 2px solid transparent;
+  font-weight: 500;
+  user-select: none;
+}
+.tabset > .tabset-label:hover { background: var(--bg-sunken); }
+
+.tabset > .tabset-radio:checked + .tabset-label {
+  background: var(--bg);
+  border-bottom-color: var(--accent);
+  font-weight: 700;
+}
+.tabset > .tabset-radio:focus-visible + .tabset-label {
+  outline: 2px solid var(--link);
+  outline-offset: -2px;
+}
+
+.tabset > .tabset-panels {
+  border-top: 1px solid var(--border);
+  padding: 0.85rem 1rem;
+}
+.tabset > .tabset-panels > .tabset-panel { display: none; }
+.tabset > .tabset-panels > .tabset-panel > :first-child { margin-top: 0; }
+.tabset > .tabset-panels > .tabset-panel > :last-child { margin-bottom: 0; }
+
+/*
+ * One rule per tab position. Twelve is generous for prose; a tabset with more
+ * than that would be a navigation problem, not a styling one.
+ */
+.tabset > .tabset-radio:nth-of-type(1):checked ~ .tabset-panels > .tabset-panel:nth-child(1),
+.tabset > .tabset-radio:nth-of-type(2):checked ~ .tabset-panels > .tabset-panel:nth-child(2),
+.tabset > .tabset-radio:nth-of-type(3):checked ~ .tabset-panels > .tabset-panel:nth-child(3),
+.tabset > .tabset-radio:nth-of-type(4):checked ~ .tabset-panels > .tabset-panel:nth-child(4),
+.tabset > .tabset-radio:nth-of-type(5):checked ~ .tabset-panels > .tabset-panel:nth-child(5),
+.tabset > .tabset-radio:nth-of-type(6):checked ~ .tabset-panels > .tabset-panel:nth-child(6),
+.tabset > .tabset-radio:nth-of-type(7):checked ~ .tabset-panels > .tabset-panel:nth-child(7),
+.tabset > .tabset-radio:nth-of-type(8):checked ~ .tabset-panels > .tabset-panel:nth-child(8),
+.tabset > .tabset-radio:nth-of-type(9):checked ~ .tabset-panels > .tabset-panel:nth-child(9),
+.tabset > .tabset-radio:nth-of-type(10):checked ~ .tabset-panels > .tabset-panel:nth-child(10),
+.tabset > .tabset-radio:nth-of-type(11):checked ~ .tabset-panels > .tabset-panel:nth-child(11),
+.tabset > .tabset-radio:nth-of-type(12):checked ~ .tabset-panels > .tabset-panel:nth-child(12) {
+  display: block;
+}
+
+/* ------------------------------------------------------------- diagrams */
+
+.diagram { margin: 1.25rem 0; text-align: center; }
+.diagram svg { max-width: 100%; height: auto; }
+.diagram-error { text-align: left; border-left: 4px solid var(--danger); padding-left: 0.8rem; }
+.diagram-error figcaption { color: var(--danger); font-size: 0.875rem; }
+
+/* Kroki renders most diagrams with dark strokes on a transparent ground, which
+   disappears against a dark page. Give them a light plate instead of trying to
+   recolour arbitrary SVG. */
+@media (prefers-color-scheme: dark) {
+  .diagram svg { background: #ffffff; border-radius: 6px; padding: 0.5rem; }
+}
+
+/* ---------------------------------------------------------------- misc */
+
+.tier-badge {
+  display: inline-block;
+  margin: 0 0 1rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.04em;
+  border: 1px solid currentColor;
+}
+.tier-private { color: var(--warning); }
+.tier-secret { color: var(--danger); }
+.tier-unlisted { color: var(--fg-muted); }
+
+.emoji { height: 1.2em; width: 1.2em; vertical-align: -0.2em; }
+
+.page-meta { color: var(--fg-muted); font-size: 0.875rem; margin-top: 2.5rem; border-top: 1px solid var(--border); padding-top: 0.75rem; }
+.page-tags { list-style: none; display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0; margin: 0.5rem 0 0; }
+.page-tags a {
+  display: inline-block;
+  padding: 0.1rem 0.55rem;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+
+.search-results { list-style: none; padding: 0; }
+.search-results > li { margin: 1.25rem 0; }
+.search-result-title { font-size: 1.05rem; font-weight: 600; }
+.search-result-url { color: var(--fg-muted); font-size: 0.8rem; }
+.search-result-snippet { margin: 0.25rem 0 0; }
+.search-result-snippet mark { background: color-mix(in srgb, var(--accent) 30%, transparent); color: inherit; }
+.search-meta { color: var(--fg-muted); font-size: 0.875rem; }
+
+.unlisted-notice {
+  border-left: 4px solid var(--fg-muted);
+  background: var(--bg-soft);
+  padding: 0.5rem 0.9rem;
+  font-size: 0.9rem;
+  border-radius: 0 6px 6px 0;
+}
+
+@media print {
+  .site-header, .sidebar, .toc, .skip-link, .dev-banner { display: none; }
+  .layout { display: block; padding: 0; }
+  .article { max-width: none; }
+  .article a.is-external-link::after { content: " (" attr(href) ")"; font-size: 0.8em; }
+  .tabset > .tabset-panels > .tabset-panel { display: block !important; }
+}
