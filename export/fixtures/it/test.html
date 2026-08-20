@@ -1,0 +1,198 @@
+<p>Lo scopo di questo documento è capire quali feature funzionano sia su Joplin che su wiki.js</p>
+<h1 class="toc-header" id="feature-che-vanno-ad-entrambi"><a href="#feature-che-vanno-ad-entrambi" class="toc-anchor">¶</a> Feature che vanno ad entrambi</h1>
+<h1 class="toc-header" id="h1"><a href="#h1" class="toc-anchor">¶</a> H1</h1>
+<h2 class="toc-header" id="h2"><a href="#h2" class="toc-anchor">¶</a> H2</h2>
+<h3 class="toc-header" id="h3"><a href="#h3" class="toc-anchor">¶</a> H3</h3>
+<h4 class="toc-header" id="h4"><a href="#h4" class="toc-anchor">¶</a> H4</h4>
+<h5 class="toc-header" id="h5"><a href="#h5" class="toc-anchor">¶</a> H5</h5>
+<h6 class="toc-header" id="h6"><a href="#h6" class="toc-anchor">¶</a> H6</h6>
+<p>Grassetto<br>
+<code>**ciao**</code><br>
+<strong>ciao</strong></p>
+<p>Corsivo<br>
+<code>*ciao*</code><br>
+<em>ciao</em></p>
+<p>Barrato<br>
+<code>~~ipsum~~</code><br>
+<s>ipsum</s></p>
+<p>Sottolineato<br>
+<code>&lt;ins&gt;ciao&lt;/ins&gt;</code><br>
+<ins>ciao</ins></p>
+<p>Sup e sub<br>
+<code>ciao&lt;sup&gt;ciao&lt;/sup&gt;ciao&lt;sub&gt;ddd&lt;/sub&gt;</code><br>
+ciao<sup>ciao</sup>ciao<sub>ddd</sub></p>
+<p>O anche<br>
+X<sub>1</sub> X<sup>2</sup></p>
+<p>Codice<br>
+<code>normale</code></p>
+<pre v-pre="true" class="prismjs line-numbers"><code class="language-python">def main():
+    print("ciao")
+In python
+</code></pre>
+<p>Per fare andare mermaid su wiki.js bisogna aggiungere "kroki" come nell'esempio seguente</p>
+<div class="mermaid">
+graph TD
+    A[Impara a usare mermaid] --&gt;|Fai grafici fichi| B(Bel sito)
+</div>
+<img class="uml-diagram prefetch-candidate" alt="uml diagram" src="https://kroki.io/mermaid/svg/eJzjSi9KLMhQCHHhUgACx2jP3ILEokSFRIXS4sSiVIXc1KLcxMyUWAVdXbsat8RMBaDytMzkTAUgkZFZo-Ck4ZSao1CcWZKvCQBgoxfv">
+<p>C'è anche <a class="is-external-link" href="https://bytefield-svg.deepsymmetry.org/bytefield-svg/intro.html">bytefield</a></p>
+<pre v-pre="true" class="prismjs line-numbers"><code class="language-bytefield">(def svg-attrs {:style "background-color:white"})
+(def left-margin 1)
+(def boxes-per-row 4)
+(draw-column-headers)
+(draw-box 0)
+(doseq [val (range 31)]
+  (draw-box val))
+(draw-box "Address" {:span 4})
+(draw-box "Size" {:span 2})
+(draw-box 0 {:span 2})
+(draw-gap "Payload")
+(draw-bottom)
+</code></pre>
+<img class="uml-diagram prefetch-candidate" alt="uml diagram" src="https://kroki.io/bytefield/svg/eJxljr0OwjAMBvc-hZWpGSJRYGLjDZAYEYPbuKEiTYoTKAXx7jSIXzH67j7JWa6phnAyCmPkANdFiIMlECVWe8P-6LSqvPW86HdNJHGT2WNhqY6qRTaNg-LJSn-moDpixb6HeaKMfZofW6d2hJo4vOgYwyQdPtABNie0kDM6QzAr5DYD-GSjk98zsdSaKQSRvu3Qwfz2o9fNhd5u-uMm_9hgB2KFg_WoxaeN0bfyDh5JXSA=">
+<p>Caption<br>
+<code>&gt; ciao</code></p>
+<blockquote>
+<p>ciao</p>
+</blockquote>
+<p>Keyboard shortcuts</p>
+<pre v-pre="true" class="prismjs line-numbers"><code class="language-">&lt;kbd&gt;CTRL&lt;/kbd&gt; \+ &lt;kbd&gt;C&lt;/kbd&gt;
+</code></pre>
+<p><kbd>CTRL</kbd> + <kbd>C</kbd></p>
+<p>Note<sup><a href="#fn1">[1]</a></sup> a pie.<sup><a href="#fn2">[2]</a></sup></p>
+<p>Latex</p>
+<pre v-pre="true" class="prismjs line-numbers"><code class="language-">$$
+y &lt;= x/2
+$$
+</code></pre>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msqrt><mrow><mn>3</mn><mi>x</mi><mo>−</mo><mn>1</mn></mrow></msqrt><mo>+</mo><mo stretchy="false">(</mo><mn>1</mn><mo>+</mo><mi>x</mi><msup><mo stretchy="false">)</mo><mn>2</mn></msup></mrow>\sqrt{3x-1}+(1+x)^2</math></span><span aria-hidden="true" class="katex-html"><span class="base"><span style="height:1.04em;vertical-align:-0.17444499999999996em;" class="strut"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span style="height:0.8655550000000001em;" class="vlist"><span style="top:-3em;" class="svg-align"><span style="height:3em;" class="pstrut"></span><span style="padding-left:0.833em;" class="mord"><span class="mord">3</span><span class="mord mathnormal">x</span><span style="margin-right:0.2222222222222222em;" class="mspace"></span><span class="mbin">−</span><span style="margin-right:0.2222222222222222em;" class="mspace"></span><span class="mord">1</span></span></span><span style="top:-2.825555em;"><span style="height:3em;" class="pstrut"></span><span style="min-width:0.853em;height:1.08em;" class="hide-tail"><svg preserveAspectRatio="xMinYMin slice" viewBox="0 0 400000 1080" height="1.08em" width="400em"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"></path></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span style="height:0.17444499999999996em;" class="vlist"><span></span></span></span></span></span><span style="margin-right:0.2222222222222222em;" class="mspace"></span><span class="mbin">+</span><span style="margin-right:0.2222222222222222em;" class="mspace"></span></span><span class="base"><span style="height:1em;vertical-align:-0.25em;" class="strut"></span><span class="mopen">(</span><span class="mord">1</span><span style="margin-right:0.2222222222222222em;" class="mspace"></span><span class="mbin">+</span><span style="margin-right:0.2222222222222222em;" class="mspace"></span></span><span class="base"><span style="height:1.064108em;vertical-align:-0.25em;" class="strut"></span><span class="mord mathnormal">x</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span style="height:0.8141079999999999em;" class="vlist"><span style="top:-3.063em;margin-right:0.05em;"><span style="height:2.7em;" class="pstrut"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>y</mi><mo>&lt;</mo><mo>=</mo><mi>x</mi><mi mathvariant="normal">/</mi><mn>2</mn></mrow>y &lt;= x/2
+</math></span><span aria-hidden="true" class="katex-html"><span class="base"><span style="height:0.7335400000000001em;vertical-align:-0.19444em;" class="strut"></span><span style="margin-right:0.03588em;" class="mord mathnormal">y</span><span style="margin-right:0.2777777777777778em;" class="mspace"></span><span class="mrel">&lt;</span></span><span class="base"><span style="height:0.36687em;vertical-align:0em;" class="strut"></span><span class="mrel">=</span><span style="margin-right:0.2777777777777778em;" class="mspace"></span></span><span class="base"><span style="height:1em;vertical-align:-0.25em;" class="strut"></span><span class="mord mathnormal">x</span><span class="mord">/</span><span class="mord">2</span></span></span></span></span></p><p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><msubsup><mo>∫</mo><mrow><mo>−</mo><mi mathvariant="normal">∞</mi></mrow><mi mathvariant="normal">∞</mi></msubsup><mover accent="true"><mi>f</mi><mo>^</mo></mover><mo stretchy="false">(</mo><mi>ξ</mi><mo stretchy="false">)</mo><mtext> </mtext><msup><mi>e</mi><mrow><mn>2</mn><mi>π</mi><mi>i</mi><mi>ξ</mi><mi>x</mi></mrow></msup><mtext> </mtext><mi>d</mi><mi>ξ</mi></mrow>f(x) = \int_{-\infty}^\infty
+	\hat f(\xi)\,e^{2 \pi i \xi x}
+	\,d\xi
+</math></span><span aria-hidden="true" class="katex-html"><span class="base"><span style="height:1em;vertical-align:-0.25em;" class="strut"></span><span style="margin-right:0.10764em;" class="mord mathnormal">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span style="margin-right:0.2777777777777778em;" class="mspace"></span><span class="mrel">=</span><span style="margin-right:0.2777777777777778em;" class="mspace"></span></span><span class="base"><span style="height:2.384573em;vertical-align:-0.970281em;" class="strut"></span><span class="mop"><span style="margin-right:0.44445em;position:relative;top:-0.0011249999999999316em;" class="mop op-symbol large-op">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span style="height:1.414292em;" class="vlist"><span style="top:-1.7880500000000001em;margin-left:-0.44445em;margin-right:0.05em;"><span style="height:2.7em;" class="pstrut"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">∞</span></span></span></span><span style="top:-3.8129000000000004em;margin-right:0.05em;"><span style="height:2.7em;" class="pstrut"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">∞</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span style="height:0.970281em;" class="vlist"><span></span></span></span></span></span></span><span style="margin-right:0.16666666666666666em;" class="mspace"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span style="height:0.9578799999999998em;" class="vlist"><span style="top:-3em;"><span style="height:3em;" class="pstrut"></span><span style="margin-right:0.10764em;" class="mord mathnormal">f</span></span><span style="top:-3.26344em;"><span style="height:3em;" class="pstrut"></span><span style="left:-0.08332999999999999em;" class="accent-body"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span style="height:0.19444em;" class="vlist"><span></span></span></span></span></span><span class="mopen">(</span><span style="margin-right:0.04601em;" class="mord mathnormal">ξ</span><span class="mclose">)</span><span style="margin-right:0.16666666666666666em;" class="mspace"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span style="height:0.8991079999999999em;" class="vlist"><span style="top:-3.1130000000000004em;margin-right:0.05em;"><span style="height:2.7em;" class="pstrut"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span><span style="margin-right:0.03588em;" class="mord mathnormal mtight">π</span><span class="mord mathnormal mtight">i</span><span style="margin-right:0.04601em;" class="mord mathnormal mtight">ξ</span><span class="mord mathnormal mtight">x</span></span></span></span></span></span></span></span></span><span style="margin-right:0.16666666666666666em;" class="mspace"></span><span class="mord mathnormal">d</span><span style="margin-right:0.04601em;" class="mord mathnormal">ξ</span></span></span></span></span></p><p>Lista</p>
+<ul>
+<li>Milk</li>
+<li>Eggs</li>
+</ul>
+<p>Lista</p>
+<ul>
+<li>1</li>
+<li>2</li>
+<li>3</li>
+</ul>
+<p>Ordered list</p>
+<ol>
+<li>A</li>
+<li>B
+<ol>
+<li>C</li>
+<li>D</li>
+</ol>
+</li>
+</ol>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled="" class="task-list-item-checkbox"> Milk</li>
+<li class="task-list-item"><input type="checkbox" disabled="" checked="" class="task-list-item-checkbox"> Rice
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled="" class="task-list-item-checkbox"> Eggs</li>
+<li class="task-list-item"><input type="checkbox" disabled="" class="task-list-item-checkbox"> Milk
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled="" checked="" class="task-list-item-checkbox"> Rice</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled="" class="task-list-item-checkbox"> Eggs</li>
+</ul>
+<p><img src="/_assets/svg/twemoji/1f604.svg" alt="😄" draggable="false" class="emoji"></p>
+<p><img alt="Icona" src="https://www.davidepalma.it/favicon.ico"></p>
+<p>One rule:</p>
+<hr>
+<p>kk</p>
+<h1 class="toc-header" id="feature-che-vanno-solo-su-joplin"><a href="#feature-che-vanno-solo-su-joplin" class="toc-anchor">¶</a> Feature che vanno solo su Joplin</h1>
+<p>TOC<br>
+$</p>
+<p>Evidenziato<br>
+<code>==ciao==</code><br>
+==ciao==</p>
+<p>Addirittura le reazioni chimiche?</p>
+<p>\ce</p>
+<p>(c)</p>
+<pre v-pre="true" class="prismjs line-numbers"><code class="language-fountain">Your screenplay...
+</code></pre>
+<p>Term 1</p>
+<p>: Definition 1</p>
+<p>Term 2 with <em>inline markup</em></p>
+<p>: Definition 2</p>
+<pre v-pre="true" class="prismjs line-numbers"><code class="language-">    { some code, part of Definition 2 }
+
+Third paragraph of definition 2.
+</code></pre>
+<p>Each term must fit on one line, which m</p>
+<p>++inserted++</p>
+<p>Tabella strana</p>
+<p>| | Grouping ||</p>
+<div class="table-container"><table>
+<thead>
+<tr>
+<th>First Header</th>
+<th style="text-align:center">Second Header</th>
+<th style="text-align:right">Third Header</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content</td>
+<td style="text-align:center"><em>Long Cell</em></td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td>Content</td>
+<td style="text-align:center"><strong>Cell</strong></td>
+<td style="text-align:right">Cell</td>
+</tr>
+</tbody>
+</table></div>
+<p>New section | More | Data |<br>
+And more | With an escaped '\|' ||<br>
+[Prototype table]</p>
+<h1 class="toc-header" id="feature-che-vanno-solo-su-wikijs"><a href="#feature-che-vanno-solo-su-wikijs" class="toc-anchor">¶</a> Feature che vanno solo su wiki.js</h1>
+<blockquote class="is-success">
+<p>lol</p>
+</blockquote>
+<h2 class="toc-header" id="another-rule"><a href="#another-rule" class="toc-anchor">¶</a> Another rule:</h2>
+<p>Lista</p>
+<ul class="grid-list">
+<li>1</li>
+<li>2</li>
+<li>3</li>
+</ul>
+<p>Lista di link</p>
+<ul class="links-list">
+<li>1</li>
+<li>2</li>
+<li><a class="is-external-link" href="https://www.google.com">Morbi vehicula aliquam <em>Third subtitle description here</em></a></li>
+</ul>
+<tabset><template v-slot:tabs=""><li>First Tab</li><li>Second Tab</li></template><template v-slot:content=""><div class="tabset-panel"><p>Any content here will go into the first tab...</p></div><div class="tabset-panel"><p>Any content here will go into the second tab...</p></div></template></tabset>
+
+
+
+
+<h1 class="toc-header" id="basta"><a href="#basta" class="toc-anchor">¶</a> Basta</h1>
+<p><img alt="be862e69f078cd7785139658178f5aaa.png" src="/be862e69f078cd7785139658178f5aaa.png"></p>
+<ol>
+<li>A string of syntactic words. <a href="#fnref1">↩︎</a></li>
+<li>A useful example sentence. <a href="#fnref2">↩︎</a></li>
+</ol>

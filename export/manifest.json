@@ -1,0 +1,792 @@
+{
+  "exportedAt": "2026-08-20T06:11:14.804Z",
+  "pages": [
+    {
+      "id": 2,
+      "locale": "en",
+      "path": "home",
+      "title": "Home",
+      "description": "Under construction",
+      "tags": [
+        "public",
+        "disable-comments"
+      ],
+      "isPrivate": false,
+      "isPublished": true,
+      "contentType": "markdown",
+      "editorKey": "markdown",
+      "createdAt": "2022-12-28T21:19:22.640Z",
+      "updatedAt": "2022-12-31T12:26:13.505Z",
+      "toc": [
+        {
+          "title": "Under construction",
+          "anchor": "#under-construction",
+          "children": []
+        }
+      ],
+      "source": "content/en/home.md",
+      "fixture": "fixtures/en/home.html",
+      "url": "/en/home"
+    },
+    {
+      "id": 18,
+      "locale": "en",
+      "path": "money-jungle-privacy-policy",
+      "title": "Money Jungle Privacy Policy",
+      "description": "",
+      "tags": [],
+      "isPrivate": false,
+      "isPublished": true,
+      "contentType": "markdown",
+      "editorKey": "markdown",
+      "createdAt": "2024-08-24T18:49:12.378Z",
+      "updatedAt": "2024-08-24T18:49:32.400Z",
+      "toc": [
+        {
+          "title": "Privacy Policy",
+          "anchor": "#privacy-policy",
+          "children": []
+        }
+      ],
+      "source": "content/en/money-jungle-privacy-policy.md",
+      "fixture": "fixtures/en/money-jungle-privacy-policy.html",
+      "url": "/en/money-jungle-privacy-policy"
+    },
+    {
+      "id": 6,
+      "locale": "en",
+      "path": "spam",
+      "title": "page with comments",
+      "description": "",
+      "tags": [
+        "public",
+        "enable-comments"
+      ],
+      "isPrivate": false,
+      "isPublished": true,
+      "contentType": "markdown",
+      "editorKey": "markdown",
+      "createdAt": "2022-12-28T21:20:28.853Z",
+      "updatedAt": "2022-12-31T12:27:02.369Z",
+      "toc": [
+        {
+          "title": "Spam",
+          "anchor": "#spam",
+          "children": []
+        }
+      ],
+      "source": "content/en/spam.md",
+      "fixture": "fixtures/en/spam.html",
+      "url": "/en/spam"
+    },
+    {
+      "id": 17,
+      "locale": "it",
+      "path": "Università/Triennale/2°_Anno/Basi_di_Dati/domande-teoria-basi",
+      "title": "Domande teoria basi",
+      "description": "",
+      "tags": [
+        "public",
+        "disable-comments"
+      ],
+      "isPrivate": false,
+      "isPublished": true,
+      "contentType": "markdown",
+      "editorKey": "markdown",
+      "createdAt": "2022-12-31T12:20:15.807Z",
+      "updatedAt": "2022-12-31T12:27:50.558Z",
+      "toc": [
+        {
+          "title": "2 - Introduzione",
+          "anchor": "#h-2-introduzione",
+          "children": [
+            {
+              "title": "Si definiscano brevemente le nozioni di (sistema organizzativo), sistema informativo e sistema informatico esplicitando le relazioni che intercorrono tra di essi.",
+              "anchor": "#si-definiscano-brevemente-le-nozioni-di-sistema-organizzativo-sistema-informativo-e-sistema-informatico-esplicitando-le-relazioni-che-intercorrono-tra-di-essi",
+              "children": []
+            },
+            {
+              "title": "ACID",
+              "anchor": "#acid",
+              "children": [
+                {
+                  "title": "Elencare le proprietà fondamentali di una transazione e descrivere brevemente ognuna di esse.",
+                  "anchor": "#elencare-le-proprietà-fondamentali-di-una-transazione-e-descrivere-brevemente-ognuna-di-esse",
+                  "children": []
+                },
+                {
+                  "title": "Descrivere brevemente cosa sono le ACID properties, a cosa servono e da dove deriva l’espressione “ACID”.",
+                  "anchor": "#descrivere-brevemente-cosa-sono-le-acid-properties-a-cosa-servono-e-da-dove-deriva-lespressione-acid",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "title": "Data una base di dati si dica quale sia la sua parte invariante e la sua parte variabile e perché.",
+              "anchor": "#data-una-base-di-dati-si-dica-quale-sia-la-sua-parte-invariante-e-la-sua-parte-variabile-e-perché",
+              "children": []
+            },
+            {
+              "title": "Descrivere brevemente cosa sia un modello dei dati ed elencare i modelli dei dati conosciuti.",
+              "anchor": "#descrivere-brevemente-cosa-sia-un-modello-dei-dati-ed-elencare-i-modelli-dei-dati-conosciuti",
+              "children": []
+            },
+            {
+              "title": "Si descriva brevemente cosa siano indipendenza logica e fisica dai dati e quale/i modello di basi di dati consente/ono di realizzarle. --- Descrivere brevemente cosa siano indipendenza logica e fisica dai dati del modello relazione, esplicitando quale caratteristica fondamentale del modello relazionale le consentano",
+              "anchor": "#si-descriva-brevemente-cosa-siano-indipendenza-logica-e-fisica-dai-dati-e-qualei-modello-di-basi-di-dati-consenteono-di-realizzarle-descrivere-brevemente-cosa-siano-indipendenza-logica-e-fisica-dai-dati-del-modello-relazione-esplicitando-quale-caratteristica-fondamentale-del-modello-relazionale-le-consentano",
+              "children": []
+            }
+          ]
+        },
+        {
+          "title": "3- Modello Relazionale",
+          "anchor": "#h-3-modello-relazionale",
+          "children": [
+            {
+              "title": "Date le relazioni R1 di grado 3 e cardinalità 10 ed R2 di grado 5 e cardinalità 20, definire grado e cardinalità di una relazione, quindi stabilire grado e cardinalità di R1 x R2 nonché le precondizioni per l’applicazione dell’operatore, se esistenti.",
+              "anchor": "#date-le-relazioni-r1-di-grado-3-e-cardinalità-10-ed-r2-di-grado-5-e-cardinalità-20-definire-grado-e-cardinalità-di-una-relazione-quindi-stabilire-grado-e-cardinalità-di-r1-x-r2-nonché-le-precondizioni-per-lapplicazione-delloperatore-se-esistenti",
+              "children": []
+            },
+            {
+              "title": "Descrivere brevemente perché il modello relazionale è anche detto modello “basato su valori” ed in cosa si differenzia rispetto ai modelli basati su “record e puntatori”. Specificare quale/i modello/i logico/i dei dati è/sono detto/i basato/i su “record e puntatori” ed il significato delle due espressioni.",
+              "anchor": "#descrivere-brevemente-perché-il-modello-relazionale-è-anche-detto-modello-basato-su-valori-ed-in-cosa-si-differenzia-rispetto-ai-modelli-basati-su-record-e-puntatori-specificare-qualei-modelloi-logicoi-dei-dati-èsono-dettoi-basatoi-su-record-e-puntatori-ed-il-significato-delle-due-espressioni",
+              "children": []
+            },
+            {
+              "title": "Si definisca cosa è un vincolo di integrità per una base di dati relazionale; quindi, si riportano brevemente i vincoli di integrità conosciuti.",
+              "anchor": "#si-definisca-cosa-è-un-vincolo-di-integrità-per-una-base-di-dati-relazionale-quindi-si-riportano-brevemente-i-vincoli-di-integrità-conosciuti",
+              "children": []
+            },
+            {
+              "title": "DBMS",
+              "anchor": "#dbms",
+              "children": [
+                {
+                  "title": "Si definisca brevemente cosa sia un DBMS (incluso il significato dell'acronimo), le sue principali caratteristiche e le diverse tipologie di utenti esistenti per esso.",
+                  "anchor": "#si-definisca-brevemente-cosa-sia-un-dbms-incluso-il-significato-dellacronimo-le-sue-principali-caratteristiche-e-le-diverse-tipologie-di-utenti-esistenti-per-esso",
+                  "children": []
+                },
+                {
+                  "title": "Si descrivano brevemente i diversi livelli di isolamento di una transazione ed il motivo per cui sono stati introdotti.",
+                  "anchor": "#si-descrivano-brevemente-i-diversi-livelli-di-isolamento-di-una-transazione-ed-il-motivo-per-cui-sono-stati-introdotti",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "4 - Algebra relazionale",
+          "anchor": "#h-4-algebra-relazionale",
+          "children": [
+            {
+              "title": "Si descriva brevemente l’operatore di join naturale, eventuali precondizioni per l’applicazione dell’operatore, qualora esistano, e quando un join naturale si dice completo.",
+              "anchor": "#si-descriva-brevemente-loperatore-di-join-naturale-eventuali-precondizioni-per-lapplicazione-delloperatore-qualora-esistano-e-quando-un-join-naturale-si-dice-completo",
+              "children": [
+                {
+                  "title": "Si descriva brevemente quando un join naturale si dice completo.",
+                  "anchor": "#si-descriva-brevemente-quando-un-join-naturale-si-dice-completo",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "5 - Calcolo relazionale",
+          "anchor": "#h-5-calcolo-relazionale",
+          "children": []
+        },
+        {
+          "title": "6 – SQL",
+          "anchor": "#h-6-sql",
+          "children": [
+            {
+              "title": "Descrivere le caratteristiche principali di una procedura definita in SQL-2 standard e le eventuali differenze, se esistenti, rispetto alle procedure che possono essere scritte in SQL-3.",
+              "anchor": "#descrivere-le-caratteristiche-principali-di-una-procedura-definita-in-sql-2-standard-e-le-eventuali-differenze-se-esistenti-rispetto-alle-procedure-che-possono-essere-scritte-in-sql-3",
+              "children": []
+            },
+            {
+              "title": "È possibile creare domini complessi in SQL? Quali sono i domini che SQL mette a disposizione?",
+              "anchor": "#è-possibile-creare-domini-complessi-in-sql-quali-sono-i-domini-che-sql-mette-a-disposizione",
+              "children": []
+            }
+          ]
+        },
+        {
+          "title": "7 – Diagrammi E-R",
+          "anchor": "#h-7-diagrammi-e-r",
+          "children": [
+            {
+              "title": "Si descrivano brevemente le peculiarità e le finalità delle fasi di progettazione concettuale, logica e fisica.",
+              "anchor": "#si-descrivano-brevemente-le-peculiarità-e-le-finalità-delle-fasi-di-progettazione-concettuale-logica-e-fisica",
+              "children": []
+            }
+          ]
+        },
+        {
+          "title": "9 – Progettazione logica",
+          "anchor": "#h-9-progettazione-logica",
+          "children": [
+            {
+              "title": "Si descriva brevemente quali e quante sono le forme di ridondanza individuabili all’interno di un modello E-R.",
+              "anchor": "#si-descriva-brevemente-quali-e-quante-sono-le-forme-di-ridondanza-individuabili-allinterno-di-un-modello-e-r",
+              "children": []
+            },
+            {
+              "title": "Illustrare brevemente: a) i motivi per cui è necessario effettuare l’analisi della ridondanza in fase di progettazione; b) i diversi tipi di ridondanza che si possono rilevare in un modello; c) i pro ed i contro che la presenza di ridondanza determina in particolar modo rispetto alle operazioni da svolgere e che vengono prese in considerazione in fase di analisi della ridondanza.",
+              "anchor": "#illustrare-brevemente-a-i-motivi-per-cui-è-necessario-effettuare-lanalisi-della-ridondanza-in-fase-di-progettazione-b-i-diversi-tipi-di-ridondanza-che-si-possono-rilevare-in-un-modello-c-i-pro-ed-i-contro-che-la-presenza-di-ridondanza-determina-in-particolar-modo-rispetto-alle-operazioni-da-svolgere-e-che-vengono-prese-in-considerazione-in-fase-di-analisi-della-ridondanza",
+              "children": []
+            }
+          ]
+        },
+        {
+          "title": "10 – Normalizzazione",
+          "anchor": "#h-10-normalizzazione",
+          "children": [
+            {
+              "title": "Descrivere brevemente cosa è la normalizzazione e quali problemi risolve.",
+              "anchor": "#descrivere-brevemente-cosa-è-la-normalizzazione-e-quali-problemi-risolve",
+              "children": []
+            },
+            {
+              "title": "Si definisca cosa è una decomposizione senza perdita di informazione e quali condizione è possibile utilizzare per verificare tale proprietà. Opzionalmente fornire un esempio di decomposizione con perdita di informazione ed un esempio di decomposizione senza perdita di informazione.",
+              "anchor": "#si-definisca-cosa-è-una-decomposizione-senza-perdita-di-informazione-e-quali-condizione-è-possibile-utilizzare-per-verificare-tale-proprietà-opzionalmente-fornire-un-esempio-di-decomposizione-con-perdita-di-informazione-ed-un-esempio-di-decomposizione-senza-perdita-di-informazione",
+              "children": []
+            }
+          ]
+        },
+        {
+          "title": "11 – Progettazione fisica",
+          "anchor": "#h-11-progettazione-fisica",
+          "children": [
+            {
+              "title": "Illustrare brevemente quali sono i dati gestiti dal buffer (manager) e come avviene la sua gestione delle richieste.",
+              "anchor": "#illustrare-brevemente-quali-sono-i-dati-gestiti-dal-buffer-manager-e-come-avviene-la-sua-gestione-delle-richieste",
+              "children": []
+            },
+            {
+              "title": "Elencare ed illustrare brevemente le strutture usate da un DBMS per organizzare i file (e le strutture primarie dei file) a livello fisico.",
+              "anchor": "#elencare-ed-illustrare-brevemente-le-strutture-usate-da-un-dbms-per-organizzare-i-file-e-le-strutture-primarie-dei-file-a-livello-fisico",
+              "children": []
+            },
+            {
+              "title": "B Tree",
+              "anchor": "#b-tree",
+              "children": [
+                {
+                  "title": "Illustrare brevemente cosa sia un B+-Tree, le sue caratteristiche principali e per quali scopi viene utilizzato.",
+                  "anchor": "#illustrare-brevemente-cosa-sia-un-b-tree-le-sue-caratteristiche-principali-e-per-quali-scopi-viene-utilizzato",
+                  "children": []
+                },
+                {
+                  "title": "Determinare quali azioni possono essere necessarie su una struttura dati di tipo B-Tree, in caso inserimenti e cancellazioni di tuple. Descrivere tali azioni motivandone la necessità.",
+                  "anchor": "#determinare-quali-azioni-possono-essere-necessarie-su-una-struttura-dati-di-tipo-b-tree-in-caso-inserimenti-e-cancellazioni-di-tuple-descrivere-tali-azioni-motivandone-la-necessità",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "title": "Si descriva brevemente i/il criterio di ottimizzazione delle query implementato dal gestore di query di un DBMS.",
+              "anchor": "#si-descriva-brevemente-iil-criterio-di-ottimizzazione-delle-query-implementato-dal-gestore-di-query-di-un-dbms",
+              "children": []
+            }
+          ]
+        },
+        {
+          "title": "12 - SQL e applicazioni",
+          "anchor": "#h-12-sql-e-applicazioni",
+          "children": [
+            {
+              "title": "Si definisca brevemente cosa siano i trigger, il paradigma su cui sono basati, vantaggi e svantaggi per essi.",
+              "anchor": "#si-definisca-brevemente-cosa-siano-i-trigger-il-paradigma-su-cui-sono-basati-vantaggi-e-svantaggi-per-essi",
+              "children": []
+            },
+            {
+              "title": "Descrivere brevemente in cosa consiste SQL Embedded e per quale motivo viene introdotto.",
+              "anchor": "#descrivere-brevemente-in-cosa-consiste-sql-embedded-e-per-quale-motivo-viene-introdotto",
+              "children": []
+            },
+            {
+              "title": "Illustrare brevemente cosa sia il conflitto di impedenza e quali soluzioni esistano per gestirlo.",
+              "anchor": "#illustrare-brevemente-cosa-sia-il-conflitto-di-impedenza-e-quali-soluzioni-esistano-per-gestirlo",
+              "children": []
+            },
+            {
+              "title": "Nello sviluppo di applicazioni mediante linguaggi che ospitano SQL, illustrare quando è possibile utilizzare SQL statico e quando invece è necessario utilizzare SQL dinamico. Illustrare quindi la differenza tra SQL statico e SQL dinamico.",
+              "anchor": "#nello-sviluppo-di-applicazioni-mediante-linguaggi-che-ospitano-sql-illustrare-quando-è-possibile-utilizzare-sql-statico-e-quando-invece-è-necessario-utilizzare-sql-dinamico-illustrare-quindi-la-differenza-tra-sql-statico-e-sql-dinamico",
+              "children": []
+            },
+            {
+              "title": "Si descriva brevemente cosa sia un cursore e per risolvere quale problema viene introdotto. Si chiarisca inoltre la differenza tra cursori statici e dinamici ed in quale circostanza vengono usati gli uni o gli altri.",
+              "anchor": "#si-descriva-brevemente-cosa-sia-un-cursore-e-per-risolvere-quale-problema-viene-introdotto-si-chiarisca-inoltre-la-differenza-tra-cursori-statici-e-dinamici-ed-in-quale-circostanza-vengono-usati-gli-uni-o-gli-altri",
+              "children": []
+            },
+            {
+              "title": "Si descriva brevemente cosa siano le operazioni di COMMIT e ROLLBACK e quando esse vengono usate.",
+              "anchor": "#si-descriva-brevemente-cosa-siano-le-operazioni-di-commit-e-rollback-e-quando-esse-vengono-usate",
+              "children": []
+            },
+            {
+              "title": "Descrivere brevemente cosa sia un privilegio, a cosa serve, come può essere concesso e revocato e rispetto a quali risorse e/o azioni",
+              "anchor": "#descrivere-brevemente-cosa-sia-un-privilegio-a-cosa-serve-come-può-essere-concesso-e-revocato-e-rispetto-a-quali-risorse-eo-azioni",
+              "children": []
+            }
+          ]
+        },
+        {
+          "title": "13 - RDF",
+          "anchor": "#h-13-rdf",
+          "children": [
+            {
+              "title": "Descrivere brevemente RDF e quale sia il suo linguaggio di interrogazione.",
+              "anchor": "#descrivere-brevemente-rdf-e-quale-sia-il-suo-linguaggio-di-interrogazione",
+              "children": []
+            },
+            {
+              "title": "Definire cosa siano RDF ed RDFS e le differenze tra di essi.",
+              "anchor": "#definire-cosa-siano-rdf-ed-rdfs-e-le-differenze-tra-di-essi",
+              "children": []
+            }
+          ]
+        },
+        {
+          "title": "Vario",
+          "anchor": "#vario",
+          "children": [
+            {
+              "title": "Illustrare brevemente cosa siano: algebra relazionale, calcolo relazionale ed SQL, le loro peculiarità e la relazione che intercorre tra di essi.",
+              "anchor": "#illustrare-brevemente-cosa-siano-algebra-relazionale-calcolo-relazionale-ed-sql-le-loro-peculiarità-e-la-relazione-che-intercorre-tra-di-essi",
+              "children": []
+            }
+          ]
+        }
+      ],
+      "source": "content/it/Università/Triennale/2°_Anno/Basi_di_Dati/domande-teoria-basi.md",
+      "fixture": "fixtures/it/Università/Triennale/2°_Anno/Basi_di_Dati/domande-teoria-basi.html",
+      "url": "/it/Università/Triennale/2°_Anno/Basi_di_Dati/domande-teoria-basi"
+    },
+    {
+      "id": 14,
+      "locale": "it",
+      "path": "Università/Triennale/2°_Anno/Basi_di_Dati/step_traccia_teoria",
+      "title": "Come fare traccia basi",
+      "description": "",
+      "tags": [
+        "public",
+        "disable-comments"
+      ],
+      "isPrivate": false,
+      "isPublished": true,
+      "contentType": "markdown",
+      "editorKey": "markdown",
+      "createdAt": "2022-12-28T21:22:25.520Z",
+      "updatedAt": "2022-12-31T12:27:15.525Z",
+      "toc": [
+        {
+          "title": "Analisi dei requisiti",
+          "anchor": "#analisi-dei-requisiti",
+          "children": [
+            {
+              "title": "Riscrivere il testo in input",
+              "anchor": "#riscrivere-il-testo-in-input",
+              "children": []
+            },
+            {
+              "title": "Costruire glossario di termini",
+              "anchor": "#costruire-glossario-di-termini",
+              "children": []
+            },
+            {
+              "title": "Riscrivere le frasi sulle operazioni/funzioni, con frequenza delle operazioni",
+              "anchor": "#riscrivere-le-frasi-sulle-operazionifunzioni-con-frequenza-delle-operazioni",
+              "children": []
+            }
+          ]
+        },
+        {
+          "title": "Progettazione Concettuale",
+          "anchor": "#progettazione-concettuale",
+          "children": []
+        },
+        {
+          "title": "Progettazione logica",
+          "anchor": "#progettazione-logica",
+          "children": [
+            {
+              "title": "Determinazione carico applicativo",
+              "anchor": "#determinazione-carico-applicativo",
+              "children": [
+                {
+                  "title": "Tavola dei volumi",
+                  "anchor": "#tavola-dei-volumi",
+                  "children": []
+                },
+                {
+                  "title": "Tavola delle operazioni",
+                  "anchor": "#tavola-delle-operazioni",
+                  "children": []
+                },
+                {
+                  "title": "Tavola degli accessi",
+                  "anchor": "#tavola-degli-accessi",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "title": "Analisi delle ridondanze",
+              "anchor": "#analisi-delle-ridondanze",
+              "children": []
+            },
+            {
+              "title": "Eliminazione delle generalizzazioni",
+              "anchor": "#eliminazione-delle-generalizzazioni",
+              "children": []
+            },
+            {
+              "title": "Partizionamento/accorpamento di entità e associazioni",
+              "anchor": "#partizionamentoaccorpamento-di-entità-e-associazioni",
+              "children": [
+                {
+                  "title": "Partizionamento orizzontale di entità",
+                  "anchor": "#partizionamento-orizzontale-di-entità",
+                  "children": []
+                },
+                {
+                  "title": "Eliminazione di attributi multivalore",
+                  "anchor": "#eliminazione-di-attributi-multivalore",
+                  "children": []
+                },
+                {
+                  "title": "Accorpamento di entità",
+                  "anchor": "#accorpamento-di-entità",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "title": "Scelta degli identificatori primari",
+              "anchor": "#scelta-degli-identificatori-primari",
+              "children": []
+            }
+          ]
+        },
+        {
+          "title": "Traduzione verso il modello logico",
+          "anchor": "#traduzione-verso-il-modello-logico",
+          "children": []
+        },
+        {
+          "title": "Normalizzazione",
+          "anchor": "#normalizzazione",
+          "children": []
+        }
+      ],
+      "source": "content/it/Università/Triennale/2°_Anno/Basi_di_Dati/step_traccia_teoria.md",
+      "fixture": "fixtures/it/Università/Triennale/2°_Anno/Basi_di_Dati/step_traccia_teoria.html",
+      "url": "/it/Università/Triennale/2°_Anno/Basi_di_Dati/step_traccia_teoria"
+    },
+    {
+      "id": 5,
+      "locale": "it",
+      "path": "Università/Università",
+      "title": "Università",
+      "description": "Riassunto delle mie università",
+      "tags": [
+        "public",
+        "disable-comments"
+      ],
+      "isPrivate": false,
+      "isPublished": true,
+      "contentType": "markdown",
+      "editorKey": "markdown",
+      "createdAt": "2022-12-28T21:20:08.733Z",
+      "updatedAt": "2022-12-31T12:26:51.062Z",
+      "toc": [
+        {
+          "title": "Università",
+          "anchor": "#università",
+          "children": []
+        }
+      ],
+      "source": "content/it/Università/Università.md",
+      "fixture": "fixtures/it/Università/Università.html",
+      "url": "/it/Università/Università"
+    },
+    {
+      "id": 16,
+      "locale": "it",
+      "path": "cose-da-fare",
+      "title": "Cose che vorrei fare",
+      "description": "Cose che vorrei fare quando ho tempo",
+      "tags": [
+        "public",
+        "disable-comments"
+      ],
+      "isPrivate": false,
+      "isPublished": true,
+      "contentType": "markdown",
+      "editorKey": "markdown",
+      "createdAt": "2022-12-31T12:19:10.535Z",
+      "updatedAt": "2022-12-31T12:27:37.068Z",
+      "toc": [
+        {
+          "title": "Informatica",
+          "anchor": "#informatica",
+          "children": []
+        },
+        {
+          "title": "Altro",
+          "anchor": "#altro",
+          "children": []
+        }
+      ],
+      "source": "content/it/cose-da-fare.md",
+      "fixture": "fixtures/it/cose-da-fare.html",
+      "url": "/it/cose-da-fare"
+    },
+    {
+      "id": 15,
+      "locale": "it",
+      "path": "home",
+      "title": "Home",
+      "description": "",
+      "tags": [
+        "public"
+      ],
+      "isPrivate": false,
+      "isPublished": true,
+      "contentType": "markdown",
+      "editorKey": "markdown",
+      "createdAt": "2022-12-28T22:03:40.008Z",
+      "updatedAt": "2024-01-03T15:59:55.785Z",
+      "toc": [
+        {
+          "title": "Home page",
+          "anchor": "#home-page",
+          "children": [
+            {
+              "title": "Su di me",
+              "anchor": "#su-di-me",
+              "children": [
+                {
+                  "title": "Cosa sai fare?",
+                  "anchor": "#cosa-sai-fare",
+                  "children": []
+                },
+                {
+                  "title": "Cronologia",
+                  "anchor": "#cronologia",
+                  "children": []
+                },
+                {
+                  "title": "Cose carine che ho fatto finora",
+                  "anchor": "#cose-carine-che-ho-fatto-finora",
+                  "children": [
+                    {
+                      "title": "Progetti per UniMORE",
+                      "anchor": "#progetti-per-unimore",
+                      "children": []
+                    },
+                    {
+                      "title": "Progetti per Poggiolevante",
+                      "anchor": "#progetti-per-poggiolevante",
+                      "children": []
+                    },
+                    {
+                      "title": "Altri",
+                      "anchor": "#altri",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "title": "Playlist che uso per studiare",
+                  "anchor": "#playlist-che-uso-per-studiare",
+                  "children": []
+                },
+                {
+                  "title": "Contattami",
+                  "anchor": "#contattami",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "source": "content/it/home.md",
+      "fixture": "fixtures/it/home.html",
+      "url": "/it/home"
+    },
+    {
+      "id": 3,
+      "locale": "it",
+      "path": "test",
+      "title": "Joplin test",
+      "description": "Confronto fra joplin e wikijs",
+      "tags": [
+        "public"
+      ],
+      "isPrivate": false,
+      "isPublished": true,
+      "contentType": "markdown",
+      "editorKey": "markdown",
+      "createdAt": "2022-12-28T21:19:37.483Z",
+      "updatedAt": "2022-12-31T12:26:29.397Z",
+      "toc": [
+        {
+          "title": "Feature che vanno ad entrambi",
+          "anchor": "#feature-che-vanno-ad-entrambi",
+          "children": []
+        },
+        {
+          "title": "H1",
+          "anchor": "#h1",
+          "children": [
+            {
+              "title": "H2",
+              "anchor": "#h2",
+              "children": [
+                {
+                  "title": "H3",
+                  "anchor": "#h3",
+                  "children": [
+                    {
+                      "title": "H4",
+                      "anchor": "#h4",
+                      "children": [
+                        {
+                          "title": "H5",
+                          "anchor": "#h5",
+                          "children": [
+                            {
+                              "title": "H6",
+                              "anchor": "#h6",
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Feature che vanno solo su Joplin",
+          "anchor": "#feature-che-vanno-solo-su-joplin",
+          "children": []
+        },
+        {
+          "title": "Feature che vanno solo su wiki.js",
+          "anchor": "#feature-che-vanno-solo-su-wikijs",
+          "children": [
+            {
+              "title": "Another rule:",
+              "anchor": "#another-rule",
+              "children": []
+            }
+          ]
+        },
+        {
+          "title": "Basta",
+          "anchor": "#basta",
+          "children": []
+        }
+      ],
+      "source": "content/it/test.md",
+      "fixture": "fixtures/it/test.html",
+      "url": "/it/test"
+    },
+    {
+      "id": 4,
+      "locale": "it",
+      "path": "tips-uni",
+      "title": "Tips per l'università",
+      "description": "",
+      "tags": [
+        "public",
+        "enable-comments"
+      ],
+      "isPrivate": false,
+      "isPublished": true,
+      "contentType": "markdown",
+      "editorKey": "markdown",
+      "createdAt": "2022-12-28T21:19:53.827Z",
+      "updatedAt": "2022-12-31T12:26:39.791Z",
+      "toc": [],
+      "source": "content/it/tips-uni.md",
+      "fixture": "fixtures/it/tips-uni.html",
+      "url": "/it/tips-uni"
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "file": "assets/be862e69f078cd7785139658178f5aaa.png",
+      "url": "/be862e69f078cd7785139658178f5aaa.png",
+      "mime": "image/png",
+      "size": 156747
+    },
+    {
+      "id": 2,
+      "file": "assets/icona_palma.png",
+      "url": "/icona_palma.png",
+      "mime": "image/png",
+      "size": 23043
+    },
+    {
+      "id": 3,
+      "file": "assets/icona_palma2.png",
+      "url": "/icona_palma2.png",
+      "mime": "image/png",
+      "size": 27082
+    },
+    {
+      "id": 4,
+      "file": "assets/senza_titolo.png",
+      "url": "/senza_titolo.png",
+      "mime": "image/png",
+      "size": 491545
+    },
+    {
+      "id": 5,
+      "file": "assets/res/be862e69f078cd7785139658178f5aaa.png",
+      "url": "/res/be862e69f078cd7785139658178f5aaa.png",
+      "mime": "image/png",
+      "size": 156747
+    },
+    {
+      "id": 6,
+      "file": "assets/res/icona_palma.png",
+      "url": "/res/icona_palma.png",
+      "mime": "image/png",
+      "size": 23043
+    },
+    {
+      "id": 7,
+      "file": "assets/res/icona_palma2.png",
+      "url": "/res/icona_palma2.png",
+      "mime": "image/png",
+      "size": 27082
+    },
+    {
+      "id": 8,
+      "file": "assets/res/senza_titolo.png",
+      "url": "/res/senza_titolo.png",
+      "mime": "image/png",
+      "size": 491545
+    },
+    {
+      "id": 13,
+      "file": "assets/palm.svg",
+      "url": "/palm.svg",
+      "mime": "image/svg+xml",
+      "size": 1152
+    }
+  ]
+}

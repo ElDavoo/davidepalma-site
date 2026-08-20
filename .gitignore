@@ -1,0 +1,10 @@
+node_modules/
+_site/
+.cache/
+*.log
+
+# Working copies of migrated content and assets — these belong in the content
+# repos, not here. Fixtures and the manifest ARE committed: CI parity-checks
+# against them.
+export/content/
+export/assets/

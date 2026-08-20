@@ -1,0 +1,311 @@
+<h1 class="toc-header" id="analisi-dei-requisiti"><a href="#analisi-dei-requisiti" class="toc-anchor">¶</a> Analisi dei requisiti</h1>
+<h2 class="toc-header" id="riscrivere-il-testo-in-input"><a href="#riscrivere-il-testo-in-input" class="toc-anchor">¶</a> Riscrivere il testo in input</h2>
+<ol>
+<li>
+<p>Scegliere il corretto livello di astrazione, scegliendo termini normali</p>
+</li>
+<li>
+<p>Standardizzare la struttura delle frasi</p>
+</li>
+<li>
+<p>Linearizzare le frasi, suddividendo quelle articolate.</p>
+</li>
+<li>
+<p>Individuare omonimi e sinonimi, unificando i termini</p>
+</li>
+<li>
+<p>Rendere esplicito il riferimento fra termini</p>
+</li>
+<li>
+<p>Riorganizzare le frasi per concetti</p>
+<ol>
+<li>
+<p>Frasi di carattere generale</p>
+</li>
+<li>
+<p>Frasi relative a feature N</p>
+</li>
+</ol>
+</li>
+<li>
+<p>Scrivere SOLO le specifiche sui dati, non quelle sulle operazioni</p>
+</li>
+</ol>
+<h2 class="toc-header" id="costruire-glossario-di-termini"><a href="#costruire-glossario-di-termini" class="toc-anchor">¶</a> Costruire glossario di termini</h2>
+<div class="table-container"><table>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Termine</th>
+<th>Descrizione</th>
+<th>Sinonimi</th>
+<th>Collegamenti</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Partecipante</td>
+<td>Un partecipante ai corsi, può essere dipendente o libero</td>
+<td>Studente</td>
+<td>Corso, Società</td>
+</tr>
+</tbody>
+</table></div>
+<h2 class="toc-header" id="riscrivere-le-frasi-sulle-operazionifunzioni-con-frequenza-delle-operazioni"><a href="#riscrivere-le-frasi-sulle-operazionifunzioni-con-frequenza-delle-operazioni" class="toc-anchor">¶</a> Riscrivere le frasi sulle operazioni/funzioni, con frequenza delle operazioni</h2>
+<p>Il sistema deve essere in grado di gestire, tra le altre, le seguenti operazioni:</p>
+<ol>
+<li>visualizzare l'insieme delle fografie per un certo tipo di soggetto e la loro dislocazione fisica (50 volte al gg)</li>
+</ol>
+<h1 class="toc-header" id="progettazione-concettuale"><a href="#progettazione-concettuale" class="toc-anchor">¶</a> Progettazione Concettuale</h1>
+<p>Strategia Ibrida:</p>
+<ol>
+<li>
+<p>partendo dalle specifiche si rappresentano tutte le informazioni in uno <strong>SCHEMA SCHELETRO</strong> iniziale usando pochi concetti astratti.</p>
+</li>
+<li>
+<p>Successivamente ogni entità e/relazione dello schema è <strong>RAFFINATA.</strong></p>
+<ol>
+<li>
+<p>Vengono incluse solo le entità, non le relazioni</p>
+</li>
+<li>
+<p>Scrivere separatemente valori ammessi e vincoli</p>
+</li>
+</ol>
+</li>
+<li>
+<p>i diversi schemi ottenuti sono <strong>INTEGRATI</strong>, giungendo allo schema E-R finale, più dettagliato di quello iniziale.</p>
+</li>
+</ol>
+<p>Includere le scelte che si sono effettuate, la lista degli enum e i vincoli di integrità (sotto forma di asserzione, ovvero deve/non deve).</p>
+<p>Se è troppo complicato aggiungere gli attributi nello schema si possono non disegnare e aggiungerli in un dizionario dei dati</p>
+<div class="table-container"><table>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Enetità</th>
+<th>Descrizione</th>
+<th>Attributi</th>
+<th>Identificatore</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Impiegato</td>
+<td>Un impiegato che lavora</td>
+<td>Codice, Cognome, Stipendio</td>
+<td>Codice</td>
+</tr>
+</tbody>
+</table></div>
+<h1 class="toc-header" id="progettazione-logica"><a href="#progettazione-logica" class="toc-anchor">¶</a> Progettazione logica</h1>
+<h2 class="toc-header" id="determinazione-carico-applicativo"><a href="#determinazione-carico-applicativo" class="toc-anchor">¶</a> Determinazione carico applicativo</h2>
+<h3 class="toc-header" id="tavola-dei-volumi"><a href="#tavola-dei-volumi" class="toc-anchor">¶</a> Tavola dei volumi</h3>
+<div class="table-container"><table>
+<colgroup>
+<col style="width: 33%">
+<col style="width: 32%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Concetto</th>
+<th>Tipo</th>
+<th>Volume</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Sede</td>
+<td>E</td>
+<td>10</td>
+</tr>
+</tbody>
+</table></div>
+<h3 class="toc-header" id="tavola-delle-operazioni"><a href="#tavola-delle-operazioni" class="toc-anchor">¶</a> Tavola delle operazioni</h3>
+<div class="table-container"><table>
+<colgroup>
+<col style="width: 33%">
+<col style="width: 32%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Operazione</th>
+<th>Tipo</th>
+<th>Frequenza</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Op.1</td>
+<td>I</td>
+<td>50 al giorno</td>
+</tr>
+</tbody>
+</table></div>
+<h3 class="toc-header" id="tavola-degli-accessi"><a href="#tavola-degli-accessi" class="toc-anchor">¶</a> Tavola degli accessi</h3>
+<p>Costo di una lettura = 1, costo di una scrittura = 2</p>
+<p>Per ogni operazione spiegare il perché della stima e costruire una tavola degli accessi</p>
+<p>Operazione 1</p>
+<div class="table-container"><table>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 24%">
+<col style="width: 24%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Concetto</th>
+<th>Costrutto</th>
+<th>Accessi</th>
+<th>Tipo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Impiegato</td>
+<td>Entità</td>
+<td>1</td>
+<td>L</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>Operazione N…</p>
+<div class="table-container"><table>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 24%">
+<col style="width: 24%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Concetto</th>
+<th>Costrutto</th>
+<th>Accessi</th>
+<th>Tipo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Afferenza</td>
+<td>Relazione</td>
+<td>1</td>
+<td>L</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h2 class="toc-header" id="analisi-delle-ridondanze"><a href="#analisi-delle-ridondanze" class="toc-anchor">¶</a> Analisi delle ridondanze</h2>
+<p>Forme di ridondanza da eliminare:</p>
+<ol>
+<li>
+<p>attributi derivabili per ogni occorrenza, sia da altri attributi della stessa entità o associazione, sia da attributi di altre entità o associazioni, spesso tramite funzioni di aggregazione</p>
+</li>
+<li>
+<p>Associazioni derivabili dalla composizione di altre associazioni, ovvero presenza di cicli (nota: la presenza di cicli non garantisce la presenza di una ridondanza).</p>
+</li>
+</ol>
+<p>La decisione fra mantenere o eliminare una ridondanza va presa confrontando:</p>
+<ol>
+<li>
+<p>Il costo di esecuzione delle operazioni, con/senza ridondanza</p>
+<ol>
+<li>
+<p>Per ogni operazione:</p>
+<ol>
+<li>
+<p>Prendi la tavola degli accessi con/senza ridondanza ed esegui la somma degli accessi</p>
+</li>
+<li>
+<p>Moltiplica la somma del costo di accesso per la frequenza giornaliera (che troverai nella tavola delle operazioni)</p>
+</li>
+</ol>
+</li>
+<li>
+<p>Somma tutto</p>
+</li>
+</ol>
+</li>
+</ol>
+<p>sommatoria, per ogni operazione, di: (somma tavola accessi) *frequenza giornaliera</p>
+<ol start="2">
+<li>Lo spazio occupato dal dato ridondante (non importante da fare)</li>
+</ol>
+<h2 class="toc-header" id="eliminazione-delle-generalizzazioni"><a href="#eliminazione-delle-generalizzazioni" class="toc-anchor">¶</a> Eliminazione delle generalizzazioni</h2>
+<ol>
+<li>
+<p>Accorpamento delle figlie nel genitore</p>
+<ol>
+<li>
+<p>Le entità figlie sono eliminate e le loro proprietà aggiunte al padre. Viene inoltre aggiunto un attributo per distinguere il tipo di occorrenza di padre.</p>
+</li>
+<li>
+<p>Accorpamento del padre nelle figlie: Si elimina il padre, i suoi attributi vengono aggiunti alle figlie, le relazioni vengono divise in due. Si può fare solo se totale.</p>
+</li>
+<li>
+<p>Sostituzione della generalizzazione con associazioni (relazioni 0,1 1,1 (parziale) 1,1,1,1 (totale)), con chiave esterna che lega figlie alla relazione. Conviene farlo se gli accessi alle entità figlie sono separatai dagli accessi del padre.</p>
+</li>
+</ol>
+</li>
+</ol>
+<h2 class="toc-header" id="partizionamentoaccorpamento-di-entità-e-associazioni"><a href="#partizionamentoaccorpamento-di-entità-e-associazioni" class="toc-anchor">¶</a> Partizionamento/accorpamento di entità e associazioni</h2>
+<p>Partizionamento verticale di entità:</p>
+<p>si suddivida un’entità in due entità legate da una relazione. <img style="width:3.82298in;height:1.84287in" src="media/image1.png"></p>
+<h3 class="toc-header" id="partizionamento-orizzontale-di-entità"><a href="#partizionamento-orizzontale-di-entità" class="toc-anchor">¶</a> Partizionamento orizzontale di entità</h3>
+<p>Ripartizione di Impiegato in Analista e Venditore (sulle occorrenze di un’entità e non sugli attributi).</p>
+<h3 class="toc-header" id="eliminazione-di-attributi-multivalore"><a href="#eliminazione-di-attributi-multivalore" class="toc-anchor">¶</a> Eliminazione di attributi multivalore</h3>
+<p>Attributi che possono avere più istanze, tipo una agenzia che ha più numeri di telefono</p>
+<h3 class="toc-header" id="accorpamento-di-entità"><a href="#accorpamento-di-entità" class="toc-anchor">¶</a> Accorpamento di entità</h3>
+<h2 class="toc-header" id="scelta-degli-identificatori-primari"><a href="#scelta-degli-identificatori-primari" class="toc-anchor">¶</a> Scelta degli identificatori primari</h2>
+<p>L’identificatore primario di una relazione:</p>
+<ol>
+<li>
+<p>Non deve avere valori nulli</p>
+</li>
+<li>
+<p>Deve essere semplice</p>
+</li>
+<li>
+<p>Deve essere usato nelle operazioni più frequenti</p>
+</li>
+</ol>
+<h1 class="toc-header" id="traduzione-verso-il-modello-logico"><a href="#traduzione-verso-il-modello-logico" class="toc-anchor">¶</a> Traduzione verso il modello logico</h1>
+<p>Le entità diventano relazioni</p>
+<p>Le associazioni diventano relazioni</p>
+<p>Impiegato(<u>Matricola</u>, Cognome, Stipendio)</p>
+<p>Progetto(C<u>odice</u>, Nome, Budget)</p>
+<p>Partecipazione(<u>Matricola, Codice</u>, DataInizio)</p>
+<p>Se c’è una relazione uno-a-molto, prestare attenzione alla chiave, alcuni attributi potrebbero essere non necessari</p>
+<p>Se due relazioni hanno la stessa chiave, si possono fondere</p>
+<p>Indicare <u>chiavi,</u> possibili valori nulli* e vincoli di integrità referenziale con le frecce</p>
+<h1 class="toc-header" id="normalizzazione"><a href="#normalizzazione" class="toc-anchor">¶</a> Normalizzazione</h1>
+<p>Una dipendenza funzionale è un attributo il cui valore dipende sempre da un altro attributo, ad esempio “tipolavoro” determina “stipendio”. Questa è una generalizzazione della definizione di vincolo di chiave.</p>
+<p>Le anomalie si verificano in corrispondenza delle dipendenze funzionali che non derivano dalle chiavi</p>
+<p>Si tratta di Dipendenza Funzionale “banale” (sempre soddisfatta) • Y → A è non banale se A non appartiene a Y • Y → Z è non banale se nessun attributo in Z appartiene a Y</p>
+<p>Una relazione r è in forma normale di Boyce e Codd (BCNF) se, per ogni dipendenza funzionale (“non banale”) X◊Y “definita” su r, X è (super)chiave.</p>
+<p>Def. Una relazione r è in terza forma normale (3NF) se, per ogni dipendenza funzionale (“non banale”) X◊Y definita su r, almeno una delle seguenti condizioni è verificata: • X contiene una chiave K di r • ogni attributo in Y è contenuto in almeno una chiave di r.</p>
+<p>Di solito si decompone una relazione, ma si può anche introdurre un altro attributo</p>
