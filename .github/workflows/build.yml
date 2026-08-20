@@ -32,6 +32,11 @@ jobs:
       contents: read
       packages: write
 
+    env:
+      # The `secrets` context cannot be used in an `if:` condition, so the one
+      # decision that depends on a secret's presence reads it from here.
+      CONTENT_TOKEN: ${{ secrets.CONTENT_TOKEN }}
+
     services:
       # Kroki renders graphviz, plantuml, bytefield and friends itself, and
       # delegates mermaid to a companion container. Running our own instance
@@ -63,7 +68,7 @@ jobs:
       - name: Check out private content
         # Guarded so the build can run before CONTENT_TOKEN exists. The next
         # step is what keeps that from being dangerous.
-        if: ${{ secrets.CONTENT_TOKEN != '' }}
+        if: env.CONTENT_TOKEN != ''
         uses: actions/checkout@v4
         with:
           repository: ElDavoo/wiki-content-private
