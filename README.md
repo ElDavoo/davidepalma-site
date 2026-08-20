@@ -97,22 +97,26 @@ anything.
 ## Working on it
 
 ```bash
-nix develop            # node, go, psql, htpasswd
+nix develop                          # node, go, podman, psql, htpasswd
 npm ci
-npm run dev            # http://localhost:8080, hot reload
+tools/kroki.sh start                 # local diagram renderer (first run pulls ~1 GB)
+KROKI_SERVER=http://127.0.0.1:8000 npm run dev
 ```
+
+Then open <http://localhost:8080>. Save a `.md` in either content repo and the
+browser reloads — rebuilds are around a second.
 
 `npm run dev` runs the real Go server beside Eleventy and proxies `/search` to
 it, so search in dev is the implementation that ships. Every tier is served
-unauthenticated locally, behind a visible banner.
+unauthenticated locally, behind a visible banner, so private and secret pages are
+editable too.
 
-Diagrams need a Kroki server. kroki.io works for most types but its public
-mermaid backend is unreliable, so for mermaid run one locally:
-
-```bash
-docker compose -f docker-compose.dev.yml up -d
-KROKI_SERVER=http://localhost:8000 npm run dev
-```
+`tools/kroki.sh` runs the **same two images CI uses**, under rootless Podman, so
+a diagram previews exactly as it will publish. It is only needed for mermaid:
+kroki.io handles every other type, but its public mermaid backend is unreliable
+(it answers 500). Without it, mermaid falls back to showing its source and the
+rest of the page is unaffected. With it, `DIAGRAMS_STRICT=1 npm run build`
+succeeds locally, which is a production-equivalent build.
 
 Open the preview beside the markdown with **Simple Browser: Show** →
 `http://localhost:8080`, or the Live Preview extension. Save the `.md`, the pane

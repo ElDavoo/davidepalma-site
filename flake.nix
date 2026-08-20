@@ -13,6 +13,9 @@
           packages = with pkgs; [
             nodejs_24
             go
+            # Runs the same Kroki images CI uses, rootless, for diagram previews
+            # while authoring. See tools/kroki.sh.
+            podman
             postgresql        # psql, for the one-shot WikiJS export
             apacheHttpd       # htpasswd
             git

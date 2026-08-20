@@ -70,7 +70,13 @@ export async function renderPages (pages, opts = {}) {
       config
     })
 
-    if (useCache) {
+    // Do not cache a page whose diagram fell back to its source. The cache key
+    // covers the content, not the state of the diagram renderer, so a page
+    // cached while Kroki was unreachable would keep showing the fallback long
+    // after Kroki came back -- and clearing .cache/diagrams would not help,
+    // because this cache would still answer first.
+    const hadDiagramFailure = html.includes('diagram-error')
+    if (useCache && !hadDiagramFailure) {
       await fs.mkdir(CACHE_DIR, { recursive: true })
       await fs.writeFile(cacheFile, JSON.stringify({ html, headings, internalRefs }))
     }
