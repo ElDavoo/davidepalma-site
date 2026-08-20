@@ -8,6 +8,39 @@ experience needs a browser runtime: the page shell, the navigation tree, tabsets
 and diagrams are all Vue. This project renders the same content to plain HTML at
 build time and serves it from a small Go binary.
 
+## Editing content
+
+```bash
+cd ~/git/davidepalma-site && nix develop     # 1. enter the toolchain
+tools/kroki.sh start                         # 2. diagram renderer (mermaid only)
+KROKI_SERVER=http://127.0.0.1:8000 npm run dev   # 3. preview on :8080
+```
+
+Open <http://localhost:8080>. Edit any `.md` in `../wikijs-content` (public) or
+`../wiki-content-private` (private and secret) and save — the browser reloads in
+about a second, rendered through the real pipeline with the real stylesheet.
+
+**To publish:** commit and push the content repo. That triggers a build, which
+verifies and publishes a new image; the Pi picks it up within 15 minutes.
+
+**To stop:**
+
+```bash
+# Ctrl-C the dev server, then:
+tools/kroki.sh stop
+```
+
+Step 2 is optional — it is only needed to preview **mermaid** diagrams, because
+kroki.io's public mermaid backend is broken. Skip it and mermaid shows its source
+while everything else renders normally.
+
+In VS Code, open `davidepalma-site.code-workspace` (three roots: generator,
+public content, private content) and run the default build task, which does steps
+2 and 3 together. Put the preview beside the markdown with **Simple Browser:
+Show** → `http://localhost:8080`.
+
+More detail in [Working on it](#working-on-it) below.
+
 ## Why an earlier Hugo attempt did not work
 
 wiki.js renders in two stages:
@@ -96,15 +129,9 @@ anything.
 
 ## Working on it
 
-```bash
-nix develop                          # node, go, podman, psql, htpasswd
-npm ci
-tools/kroki.sh start                 # local diagram renderer (first run pulls ~1 GB)
-KROKI_SERVER=http://127.0.0.1:8000 npm run dev
-```
-
-Then open <http://localhost:8080>. Save a `.md` in either content repo and the
-browser reloads — rebuilds are around a second.
+The three commands are at the top under [Editing content](#editing-content). On a
+fresh clone, run `npm ci` first, and expect `tools/kroki.sh start` to pull about
+1 GB the first time.
 
 `npm run dev` runs the real Go server beside Eleventy and proxies `/search` to
 it, so search in dev is the implementation that ships. Every tier is served
