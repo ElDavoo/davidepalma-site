@@ -9,7 +9,7 @@
 # Go cross-compiles, so the builder stage stays on the native platform and
 # targets $TARGETARCH -- no QEMU emulation for an arm64 Raspberry Pi image.
 
-FROM --platform=$BUILDPLATFORM golang:1.24-alpine AS build
+FROM --platform=$BUILDPLATFORM golang:1.25-alpine AS build
 ARG TARGETARCH
 WORKDIR /src
 COPY server/go.mod server/go.sum* ./
