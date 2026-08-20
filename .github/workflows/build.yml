@@ -61,11 +61,34 @@ jobs:
           path: wikijs-content
 
       - name: Check out private content
+        # Guarded so the build can run before CONTENT_TOKEN exists. The next
+        # step is what keeps that from being dangerous.
+        if: ${{ secrets.CONTENT_TOKEN != '' }}
         uses: actions/checkout@v4
         with:
           repository: ElDavoo/wiki-content-private
           token: ${{ secrets.CONTENT_TOKEN }}
           path: wiki-content-private
+
+      - name: Refuse to publish without private content
+        # If CONTENT_TOKEN ever stops working, the build would otherwise succeed
+        # and publish an image in which every private and secret page has
+        # silently vanished into a 404. Fail instead.
+        #
+        # Set the repository variable ALLOW_MISSING_PRIVATE=true only to bootstrap
+        # the first build, and remove it once the token is in place.
+        run: |
+          if [ -d wiki-content-private ] && [ -n "$(find wiki-content-private -name '*.md' -not -path '*/.*' -print -quit)" ]; then
+            echo "private content: $(find wiki-content-private -name '*.md' -not -path '*/.*' | wc -l) file(s)"
+            exit 0
+          fi
+          if [ "${{ vars.ALLOW_MISSING_PRIVATE }}" = "true" ]; then
+            echo "::warning::Building WITHOUT private content (ALLOW_MISSING_PRIVATE is set). Private and secret pages will be absent from this image."
+            mkdir -p wiki-content-private
+            exit 0
+          fi
+          echo "::error::Private content is missing. Set the CONTENT_TOKEN secret, or set the repository variable ALLOW_MISSING_PRIVATE=true to build without it."
+          exit 1
 
       - uses: actions/setup-node@v4
         with:
