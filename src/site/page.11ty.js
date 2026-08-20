@@ -1,5 +1,6 @@
 /** One HTML file per page, at the URL its tier dictates. */
 import { layout, escapeHtml } from '../../templates/layout.mjs'
+import { treesFor } from '../tree.mjs'
 
 export const data = {
   pagination: { data: 'wiki.pages', size: 1, alias: 'doc' },
@@ -44,7 +45,7 @@ export function render (data) {
     noindex: doc.tier !== 'public',
     currentPath: doc.path,
     headings: doc.headings,
-    trees: doc.trees,
+    trees: treesFor(doc.tier, doc.trees),
     translations: doc.translations,
     devBanner: data.wiki.isDev,
     content: notice + doc.html,

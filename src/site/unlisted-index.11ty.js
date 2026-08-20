@@ -7,6 +7,7 @@
  * unlisted tier exists to avoid publishing.
  */
 import { layout, escapeHtml } from '../../templates/layout.mjs'
+import { treesFor } from '../tree.mjs'
 
 export const data = {
   permalink: 'secret/unlisted.html',
@@ -40,7 +41,7 @@ export function render (data) {
     title: t.unlistedIndex,
     tier: 'secret',
     noindex: true,
-    trees: data.wiki.trees[locale],
+    trees: treesFor('secret', data.wiki.trees[locale]),
     translations: {},
     devBanner: data.wiki.isDev,
     content: `<h1>${escapeHtml(t.unlistedIndex)}</h1>
