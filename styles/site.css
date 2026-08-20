@@ -32,7 +32,6 @@
 
   --measure: 46rem;
   --sidebar: 17rem;
-  --toc: 15rem;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -100,20 +99,36 @@ a:hover { text-decoration-thickness: 2px; }
 
 /* ---------------------------------------------------------------- header */
 
+/*
+ * Three grid areas rather than a flex row: the outer columns are both 1fr, so
+ * the search box sits at the true centre of the header regardless of how long
+ * the brand or the locale list happens to be.
+ */
 .site-header {
-  display: flex; flex-wrap: wrap; gap: 0.75rem 1.25rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 34rem) minmax(0, 1fr);
+  grid-template-areas: "brand search lang";
+  gap: 0.75rem 1.25rem;
   align-items: center;
   padding: 0.75rem 1.25rem;
   border-bottom: 1px solid var(--border);
   background: var(--bg-soft);
 }
 
-.site-title {
-  font-weight: 700; font-size: 1.05rem;
+.site-brand {
+  grid-area: brand; justify-self: start;
+  display: flex; align-items: center; gap: 0.55rem;
+  min-width: 0;
   color: var(--fg); text-decoration: none;
 }
+/* alt="" -- the wordmark beside it already names the link. */
+.site-logo { flex: none; width: 1.75rem; height: 1.75rem; }
+.site-title {
+  font-weight: 700; font-size: 1.05rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
 
-.search { display: flex; gap: 0.4rem; flex: 1 1 16rem; max-width: 30rem; }
+.search { grid-area: search; display: flex; gap: 0.4rem; }
 .search input[type="search"] {
   flex: 1; min-width: 0;
   padding: 0.4rem 0.6rem;
@@ -128,11 +143,20 @@ a:hover { text-decoration-thickness: 2px; }
 }
 .search button:hover { border-color: var(--link); }
 
+.lang { grid-area: lang; justify-self: end; }
 .lang ul { display: flex; gap: 0.5rem; list-style: none; margin: 0; padding: 0; }
 .lang li + li::before { content: "·"; color: var(--fg-muted); margin-right: 0.5rem; }
 .lang-current { font-weight: 600; }
 /* No translation exists: the link falls back to that locale's home page. */
 .lang-fallback { opacity: 0.7; font-style: italic; }
+
+/* Too narrow for three columns: brand and locales share a row, search takes its own. */
+@media (max-width: 52rem) {
+  .site-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "brand lang" "search search";
+  }
+}
 
 /* ---------------------------------------------------------------- layout */
 
@@ -195,29 +219,40 @@ a:hover { text-decoration-thickness: 2px; }
 
 /* ------------------------------------------------------------------- toc */
 
-.toc {
-  float: right;
-  width: var(--toc);
-  margin: 0 0 1rem 1.5rem;
-  padding: 0.75rem 1rem;
+/*
+ * The wiki set tocPosition: "left", but a floated column beside prose this
+ * narrow crowds it. Here the TOC is a disclosure above the article -- closed by
+ * default, opened with no script by <details>.
+ */
+.toc { max-width: var(--measure); margin: 0 0 1.5rem; }
+
+.toc-details {
   background: var(--bg-soft);
   border: 1px solid var(--border);
   border-radius: 8px;
   font-size: 0.875rem;
 }
-/* tocPosition is "left" in the wiki's theming settings. */
-.toc { float: left; margin: 0 1.5rem 1rem 0; }
 
-.toc-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--fg-muted); margin: 0 0 0.4rem; }
-.toc ul { list-style: none; margin: 0; padding: 0; }
+.toc-summary {
+  cursor: pointer;
+  padding: 0.45rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.75rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--fg-muted);
+}
+.toc-summary::marker { color: var(--fg-muted); }
+.toc-summary:hover { color: var(--fg); }
+.toc-details[open] .toc-summary {
+  border-bottom: 1px solid var(--border);
+  border-radius: 8px 8px 0 0;
+}
+
+.toc ul { list-style: none; margin: 0; padding: 0.6rem 0.9rem 0.7rem; }
 .toc a { text-decoration: none; }
 .toc a:hover { text-decoration: underline; }
 .toc-level-1 { padding-left: 0.8rem; }
 .toc-level-2 { padding-left: 1.6rem; }
-
-@media (max-width: 48rem) {
-  .toc { float: none; width: auto; margin: 0 0 1.5rem; }
-}
 
 /* -------------------------------------------------------------- article */
 

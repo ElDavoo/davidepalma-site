@@ -43,17 +43,24 @@ function searchForm (ctx, value = '') {
   </form>`
 }
 
+/**
+ * Table of contents: a collapsed disclosure above the article, not a column
+ * beside it. <details> gives the open/close with no script, and being closed by
+ * default it costs nothing on pages a reader is going to scroll anyway.
+ */
 function tocList (headings, t) {
   // h1 is the page title in practice; a TOC of one entry is noise.
   const items = headings.filter(h => h.level >= 2 && h.level <= 4)
   if (items.length < 2) { return '' }
 
   const min = Math.min(...items.map(h => h.level))
-  return `<nav class="toc" aria-labelledby="toc-heading">
-    <h2 class="toc-title" id="toc-heading">${escapeHtml(t.onThisPage)}</h2>
-    <ul>${items.map(h =>
-      `<li class="toc-level-${h.level - min}"><a href="#${attr(h.slug)}">${escapeHtml(h.title)}</a></li>`
-    ).join('')}</ul>
+  return `<nav class="toc" aria-label="${attr(t.onThisPage)}">
+    <details class="toc-details">
+      <summary class="toc-summary">${escapeHtml(t.onThisPage)}</summary>
+      <ul>${items.map(h =>
+        `<li class="toc-level-${h.level - min}"><a href="#${attr(h.slug)}">${escapeHtml(h.title)}</a></li>`
+      ).join('')}</ul>
+    </details>
   </nav>`
 }
 
@@ -103,7 +110,10 @@ ${ctx.description ? `<meta name="description" content="${attr(ctx.description)}"
 <body>
 <a class="skip-link" href="#main">${escapeHtml(t.skipToContent)}</a>
 ${ctx.devBanner ? `<p class="dev-banner">${escapeHtml(t.devBanner)}</p>\n` : ''}<header class="site-header">
-  <a class="site-title" href="/${attr(locale)}/home">${escapeHtml(t.siteTitle)}</a>
+  <a class="site-brand" href="/${attr(locale)}/home">
+    <img class="site-logo" src="/icona_palma.png" alt="" width="28" height="28">
+    <span class="site-title">${escapeHtml(t.siteTitle)}</span>
+  </a>
   ${searchForm(ctx, ctx.query ?? '')}
   ${languageSelector(ctx)}
 </header>
