@@ -19,6 +19,7 @@ import { renderMarkdown } from '../src/markdown/pipeline.mjs'
 import { renderHtmlCore } from '../src/postprocess/html-core.mjs'
 import { wikijsChildren } from '../src/postprocess/children-wikijs.mjs'
 import { contentSources } from '../src/sources.mjs'
+import { _internals as diagramInternals } from '../src/postprocess/diagrams.mjs'
 
 const ROOT = path.resolve(import.meta.dirname, '..')
 const EXPORT = path.join(ROOT, 'export')
@@ -43,6 +44,18 @@ function normalise (html) {
   // text children, so the fixture still carries the raw LaTeX as a bare text node.
   $('annotation').each((i, elm) => { $(elm).replaceWith($(elm).contents()) })
   $('semantics').each((i, elm) => { $(elm).replaceWith($(elm).contents()) })
+
+  // A kroki/plantuml URL carries a deflate stream, and zlib emits different
+  // (equally valid) bytes depending on the build -- so the same diagram encodes
+  // differently on a developer machine and on a CI runner. Compare what the URL
+  // *means*: decode it and canonicalise to type + source.
+  $('img').each((i, elm) => {
+    const src = $(elm).attr('src') || ''
+    const decoded = diagramInternals.decodeKrokiUrl(src) || diagramInternals.decodePlantumlUrl(src)
+    if (decoded) {
+      $(elm).attr('src', `diagram:${decoded.type}:${Buffer.from(decoded.source).toString('base64')}`)
+    }
+  })
 
   const walk = (node) => {
     if (node.type === 'tag' || node.type === 'script' || node.type === 'style') {
