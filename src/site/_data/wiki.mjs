@@ -47,9 +47,10 @@ export default async function () {
     ? process.env.DIAGRAMS_STRICT !== '0'
     : !isDev
 
-  const { pages } = await renderPages(loaded, {
+  const { pages, cacheHits } = await renderPages(loaded, {
     diagrams: { strict: strictDiagrams, server: process.env.KROKI_SERVER }
   })
+  if (isDev && cacheHits) { console.log(`[render] ${cacheHits}/${loaded.length} pages from cache`) }
 
   // Sidebar trees, per locale and tier.
   const trees = {}

@@ -71,10 +71,28 @@ function decode64 (str) {
 async function renderDiagram (type, source, opts) {
   const key = crypto.createHash('sha256').update(`${type} ${source}`).digest('hex')
   const cacheFile = path.join(CACHE_DIR, `${key}.svg`)
+  const failFile = path.join(CACHE_DIR, `${key}.failed`)
 
   try {
     return await fs.readFile(cacheFile, 'utf8')
   } catch { /* not cached yet */ }
+
+  // Remember failures too, but only in lenient mode. Without this, an author
+  // whose Kroki is unreachable pays the full timeout on every save, which makes
+  // the hot-reload loop unusable. CI runs strict and always tries for real, so a
+  // stale failure can never reach a published image. Delete .cache/diagrams to
+  // retry.
+  if (!opts.strict) {
+    let cachedFailure = null
+    try {
+      cachedFailure = await fs.readFile(failFile, 'utf8')
+    } catch (err) {
+      if (err.code !== 'ENOENT') { throw err }
+    }
+    if (cachedFailure !== null) {
+      throw new Error(`${cachedFailure} [cached; delete .cache/diagrams to retry]`)
+    }
+  }
 
   const url = `${opts.server.replace(/\/$/, '')}/${type}/svg`
   const attempts = opts.retries ?? Number(process.env.DIAGRAM_RETRIES ?? 3)
@@ -105,7 +123,12 @@ async function renderDiagram (type, source, opts) {
     }
   }
   if (svg === undefined) {
-    throw new Error(`kroki ${type} -> ${lastErr.message} (after ${attempts} attempts)`)
+    const message = `kroki ${type} -> ${lastErr.message} (after ${attempts} attempts)`
+    if (!opts.strict) {
+      await fs.mkdir(CACHE_DIR, { recursive: true })
+      await fs.writeFile(failFile, message)
+    }
+    throw new Error(message)
   }
 
   await fs.mkdir(CACHE_DIR, { recursive: true })
@@ -165,7 +188,7 @@ export function inlineDiagrams (opts = {}) {
 
     for (const job of jobs) {
       try {
-        const svg = await renderDiagram(job.type, job.source, { server, timeoutMs: opts.timeoutMs })
+        const svg = await renderDiagram(job.type, job.source, { server, timeoutMs: opts.timeoutMs, strict })
         job.node.replaceWith(prepareSvg(svg, job))
       } catch (err) {
         const where = ctx?.page ? `${ctx.page.localeCode}/${ctx.page.path}` : 'unknown page'

@@ -610,7 +610,32 @@ func countLabel(locale string, n int) string {
 
 // ----------------------------------------------------------------- main
 
+// healthcheck lets the container declare a HEALTHCHECK without a shell in the
+// image: the binary probes itself and exits 0 or 1.
+func healthcheck() {
+	addr := envOr("LISTEN", ":8080")
+	if strings.HasPrefix(addr, ":") {
+		addr = "127.0.0.1" + addr
+	}
+	client := &http.Client{Timeout: 5 * time.Second}
+	resp, err := client.Get("http://" + addr + "/it/home")
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		fmt.Fprintf(os.Stderr, "health: HTTP %d\n", resp.StatusCode)
+		os.Exit(1)
+	}
+}
+
 func main() {
+	if len(os.Args) > 1 && os.Args[1] == "-healthcheck" {
+		healthcheck()
+		return
+	}
+
 	siteDir := envOr("SITE_DIR", "/srv/site")
 	dataDir := envOr("DATA_DIR", "/srv/data")
 	listen := envOr("LISTEN", ":8080")

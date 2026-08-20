@@ -14,6 +14,8 @@ import { spawn, execFileSync } from 'node:child_process'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import os from 'node:os'
+import { stageDist } from './stage-dist.mjs'
+import * as cheerio from 'cheerio'
 
 const ROOT = path.resolve(import.meta.dirname, '..')
 const baseIdx = process.argv.indexOf('--base')
@@ -37,17 +39,10 @@ async function status (base, url, tier) {
   return res
 }
 
-/** Split the build the way the container does: data files outside the web root. */
+/** Stage exactly as the container does, so the checks exercise the real layout. */
 async function stage () {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'davidepalma-verify-'))
-  const site = path.join(dir, 'site')
-  const data = path.join(dir, 'data')
-  await fs.cp(path.join(ROOT, '_site'), site, { recursive: true })
-  await fs.mkdir(data, { recursive: true })
-  for (const name of ['manifest.json', 'search-index.json']) {
-    await fs.rename(path.join(site, name), path.join(data, name))
-  }
-  await fs.rename(path.join(site, '_shell'), path.join(data, '_shell'))
+  const { site, data } = await stageDist(path.join(ROOT, '_site'), path.join(dir, 'dist'))
   return { dir, site, data }
 }
 
@@ -158,22 +153,46 @@ async function main () {
   }
   check('search never surfaces a protected page', leaked === null, leaked ?? '')
 
-  // ---- Protected content must not appear in public HTML ----
-  console.log('\nProtected content is absent from public pages')
+  // ---- Protected content must not leak into public page chrome ----
+  //
+  // An author may deliberately link to a protected page from an article --
+  // en/home.md does exactly that, so the owner can click through and
+  // authenticate. What must never happen is a protected page appearing in the
+  // *chrome*: the sidebar tree, the header, the footer. That is not a choice
+  // anyone made, it is a leak, and it is the bug this check was written for.
+  console.log('\nProtected content is absent from public page chrome')
   const publicPages = manifest.pages.filter(p => p.tier === 'public')
-  const protectedPaths = manifest.pages.filter(p => p.tier !== 'public')
-  let seen = null
+  const protectedPages = manifest.pages.filter(p => p.tier !== 'public')
+
+  const chromeOf = (html) => {
+    const $ = cheerio.load(html)
+    $('article.article').remove() // author-written content
+    return $.html()
+  }
+
+  let chromeLeak = null
+  let titleLeak = null
   for (const page of publicPages) {
     const html = await fs.readFile(path.join(ROOT, '_site', page.file), 'utf8')
-    for (const prot of protectedPaths) {
-      if (html.includes(prot.url)) { seen = `${page.url} mentions ${prot.url}` }
+    const chrome = chromeOf(html)
+    for (const prot of protectedPages) {
+      if (chrome.includes(prot.url)) { chromeLeak = `${page.url} chrome links to ${prot.url}` }
+      if (prot.title && chrome.includes(prot.title)) { titleLeak = `${page.url} chrome shows the title "${prot.title}"` }
     }
   }
-  check('no public page links to a protected one', seen === null, seen ?? '')
+  check('no protected URL appears in public page chrome', chromeLeak === null, chromeLeak ?? '')
+  check('no protected page title appears in public page chrome', titleLeak === null, titleLeak ?? '')
+
+  // The search page is served to anyone, so its chrome is held to the same rule.
+  for (const locale of manifest.locales) {
+    const shell = await fs.readFile(path.join(ROOT, '_site/_shell', `search-${locale}.html`), 'utf8')
+    const leak = protectedPages.find(p => shell.includes(p.url) || (p.title && shell.includes(p.title)))
+    check(`search page (${locale}) reveals no protected page`, !leak, leak ? `${leak.url}` : '')
+  }
 
   const sitemap = await fs.readFile(path.join(ROOT, '_site/sitemap.xml'), 'utf8')
   check('sitemap lists public pages only',
-    protectedPaths.every(p => !sitemap.includes(p.url)) && publicPages.every(p => sitemap.includes(p.url)))
+    protectedPages.every(p => !sitemap.includes(p.url)) && publicPages.every(p => sitemap.includes(p.url)))
 
   // ---- Report ----
   console.log(`\n${passed} passed, ${failures.length} failed`)
