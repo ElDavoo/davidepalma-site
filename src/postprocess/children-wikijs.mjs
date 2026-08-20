@@ -8,9 +8,14 @@
  */
 import hljs from 'highlight.js'
 import _ from 'lodash'
+import { hoistBlockquoteClasses } from './blockquotes.mjs'
 
-/** html-blockquotes and html-mediaplayers are no-ops upstream; {.is-info} etc. come from markdown-it-attrs. */
-export const blockquotes = async ($) => {}
+/**
+ * html-blockquotes: empty upstream, because markdown-it-attrs 3 put {.is-info}
+ * on the blockquote already. markdown-it-attrs 5 puts it on the paragraph, so
+ * this slot now does that work. html-mediaplayers is genuinely a no-op.
+ */
+export const blockquotes = hoistBlockquoteClasses
 export const mediaplayers = async ($) => {}
 
 /** html-codehighlighter: tags <pre> for client-side Prism; does not actually highlight. */

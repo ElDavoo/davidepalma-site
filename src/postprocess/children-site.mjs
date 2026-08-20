@@ -11,9 +11,14 @@
 import hljs from 'highlight.js'
 import _ from 'lodash'
 import { inlineDiagrams } from './diagrams.mjs'
+import { hoistBlockquoteClasses } from './blockquotes.mjs'
 
-/** {.is-info} and friends already come from markdown-it-attrs; nothing to do. */
-export const blockquotes = async ($) => {}
+/**
+ * html-blockquotes: empty upstream, because markdown-it-attrs 3 put {.is-info}
+ * on the blockquote already. markdown-it-attrs 5 puts it on the paragraph, so
+ * this slot now does that work. html-mediaplayers is genuinely a no-op.
+ */
+export const blockquotes = hoistBlockquoteClasses
 export const mediaplayers = async ($) => {}
 
 /** html-diagram: draw.io blocks arrive already-inlined as base64 SVG. */

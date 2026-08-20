@@ -95,6 +95,22 @@ export async function loadPages (sources, opts = {}) {
 
       if (data.published === false) { continue }
 
+      // wiki.js loads markdown-it-decorate, which turns a trailing
+      // `<!-- {.class} -->` comment into attributes. We do not: it has been
+      // unmaintained since 2022 and carries an unfixable XSS advisory
+      // (GHSA-rhf5-2378-3w3w) because it injects arbitrary attributes with no
+      // allowlist -- including event handlers, which would put JavaScript into a
+      // site whose whole premise is not having any.
+      //
+      // No page uses the syntax. If one ever does, say so rather than silently
+      // rendering an inert HTML comment.
+      if (/<!--\s*\{[^}]*\}\s*-->/.test(content)) {
+        problems.push(
+          `${source.name}: ${rel} uses markdown-it-decorate syntax (<!-- {...} -->), which is not supported. ` +
+          'Use a trailing {.class} attribute block instead.'
+        )
+      }
+
       const allowed = ALLOWED_TIERS[source.defaultTier]
       let tier = data.access ?? source.defaultTier
       if (!allowed.includes(tier)) {

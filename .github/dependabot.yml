@@ -1,29 +1,27 @@
-# The markdown pipeline is version-pinned on purpose.
+# Dependencies are kept current. Rendering parity is protected by a test, not by
+# pinning.
 #
-# This site's whole premise is that it renders byte-identically to what wiki.js
-# serves today, and tools/parity-check.mjs proves that against wiki.js's own
-# stored output. Those versions ARE the specification: bumping them changes the
-# rendering.
+# The markdown pipeline was originally pinned to the versions wiki.js uses,
+# because this site's premise is that it renders what davidepalma.it renders
+# today. Keeping current is the better trade: tools/parity-check.mjs compares
+# every page against wiki.js's own stored output, so an upgrade that changes
+# rendering fails CI and gets looked at rather than shipped.
 #
-# Measured, not assumed. On markdown-it 15 / KaTeX 0.18:
-#   - it/home loses a link: markdown-it 11 linkifies the bare domain
-#     "davidepalma.it", markdown-it 15 does not.
-#   - it/test differs in six places: KaTeX emits different markup for the same
-#     mathematics.
+# When a bump does change rendering, the choice is between restoring the old
+# behaviour and accepting the new one. Both have happened:
 #
-# The security trade-off is deliberate and the exposure is nil: these libraries
-# run at BUILD time, in CI, over markdown from two repositories the owner
-# controls. There is no path by which an attacker supplies input to them. (And
-# markdownCore has allowHTML: true, so anyone who could write to those
-# repositories could inject HTML directly regardless of library version.)
+#   - markdown-it 12 flipped linkify's `fuzzyLink` default to false, which
+#     silently dropped a link on it/home. Restored explicitly in
+#     src/markdown/pipeline.mjs.
+#   - markdown-it-attrs 5 moved a trailing {.is-info} from the blockquote to the
+#     paragraph inside it, which broke blockquote styling. Restored in
+#     src/postprocess/blockquotes.mjs.
+#   - KaTeX 0.18 fixed mhchem, so a chemistry equation that shows as the literal
+#     "\ce" on the live wiki now renders. Accepted, and recorded as an intended
+#     difference in tools/parity-check.mjs.
 #
-# Revisit if that ever stops being true -- if content becomes writable by anyone
-# else, or if the pipeline is ever pointed at input the owner does not control.
-# The upgrade path is to bump, re-run `npm run parity`, and decide whether each
-# rendering change is acceptable.
-#
-# Everything else is still watched: the Go module, the Actions, and the npm
-# packages that do not affect rendering.
+# So: read the parity failure before merging a rendering-library bump. It is
+# telling you something real.
 
 version: 2
 updates:
@@ -31,13 +29,19 @@ updates:
     directory: /
     schedule:
       interval: weekly
-    ignore:
-      - dependency-name: markdown-it
-      - dependency-name: markdown-it-*
-      - dependency-name: katex
-      - dependency-name: cheerio
-      - dependency-name: uslug
-      - dependency-name: twemoji
+    groups:
+      # One PR for the rendering stack: these are checked together by the parity
+      # test, and reviewing them together is how you see the combined effect.
+      markdown-pipeline:
+        patterns:
+          - markdown-it
+          - markdown-it-*
+          - katex
+          - cheerio
+          - uslug
+          - twemoji
+          - "@twemoji/*"
+          - highlight.js
 
   - package-ecosystem: gomod
     directory: /server

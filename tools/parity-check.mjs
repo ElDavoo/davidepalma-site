@@ -45,6 +45,15 @@ function normalise (html) {
   $('annotation').each((i, elm) => { $(elm).replaceWith($(elm).contents()) })
   $('semantics').each((i, elm) => { $(elm).replaceWith($(elm).contents()) })
 
+  // KaTeX's .katex-html subtree is presentation, not content: it is a visual
+  // rendering of the same parse the MathML above it describes, and its internal
+  // class names and rounded lengths change between KaTeX releases (0.18 renamed
+  // `base` to `katex-base` and shortened style values). We ship KaTeX's own
+  // matching stylesheet, so those changes are invisible on the page. The MathML
+  // beside it IS compared in full, so a real change to the mathematics still
+  // fails this check.
+  $('.katex-html').html('[katex presentation layer]')
+
   // A kroki/plantuml URL carries a deflate stream, and zlib emits different
   // (equally valid) bytes depending on the build -- so the same diagram encodes
   // differently on a developer machine and on a CI runner. Compare what the URL
@@ -80,6 +89,26 @@ function normalise (html) {
     .replace(/>\s+</g, '><')
     .trim()
 }
+
+/**
+ * Differences from wiki.js that are intended.
+ *
+ * Kept as an explicit, justified list rather than normalised away silently: each
+ * entry is a place where our output is deliberately NOT what the wiki serves,
+ * and that should be visible to anyone reading this file.
+ */
+const EXPECTED_DIFFERENCES = [
+  {
+    page: 'it/test',
+    description:
+      'mhchem now works. On the live wiki, $\\ce {CO2 + C -> 2 CO}$ fails to parse ' +
+      '(KaTeX 0.12 with the vendored mhchem) and the page shows the literal text "\\ce". ' +
+      'Current KaTeX renders the equation. Ours is the correct output; the fixture ' +
+      'records a bug.',
+    want: /^<p>\\ce<\/p>/,
+    got: /^<p><span class="katex"/
+  }
+]
 
 /** Split into comparable chunks so a diff points at the offending element. */
 function chunks (html) {
@@ -140,9 +169,26 @@ async function main () {
       const g = chunks(html)
       const w = chunks(expected)
       const diffs = []
+      const expectedHere = []
       for (let i = 0; i < Math.max(g.length, w.length); i++) {
-        if (g[i] !== w[i]) { diffs.push({ i, want: w[i], got: g[i] }) }
+        if (g[i] === w[i]) { continue }
+        const known = EXPECTED_DIFFERENCES.find(e =>
+          e.page === `${page.locale}/${page.path}` &&
+          e.want.test(w[i] ?? '') && e.got.test(g[i] ?? ''))
+        if (known) { expectedHere.push(known); continue }
+        diffs.push({ i, want: w[i], got: g[i] })
       }
+
+      for (const e of new Set(expectedHere)) {
+        console.log(`  note  ${page.locale}/${page.path}: ${e.description}`)
+      }
+
+      if (diffs.length === 0) {
+        pass++
+        console.log(`  PASS  ${page.locale}/${page.path} (with ${expectedHere.length} intended difference(s))`)
+        continue
+      }
+
       failures.push({ page, diffs })
       console.log(`  FAIL  ${page.locale}/${page.path}  (${diffs.length} differing chunk(s) of ${Math.max(g.length, w.length)})`)
       const show = verbose ? diffs : diffs.slice(0, 3)

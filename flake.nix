@@ -11,7 +11,7 @@
       devShells = forAll (pkgs: {
         default = pkgs.mkShell {
           packages = with pkgs; [
-            nodejs_22
+            nodejs_24
             go
             postgresql        # psql, for the one-shot WikiJS export
             apacheHttpd       # htpasswd

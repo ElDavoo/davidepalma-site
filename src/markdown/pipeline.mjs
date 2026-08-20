@@ -11,7 +11,6 @@
  */
 import MarkdownIt from 'markdown-it'
 import mdAttrs from 'markdown-it-attrs'
-import mdDecorate from 'markdown-it-decorate'
 import mdAbbr from 'markdown-it-abbr'
 import { full as mdEmoji } from 'markdown-it-emoji'
 import mdExpandTabs from 'markdown-it-expand-tabs'
@@ -63,9 +62,18 @@ export function createMarkdownIt (config = defaultConfig) {
     }
   })
 
-  // markdownCore itself, in wiki.js order: attrs then decorate.
+  // markdown-it 12 flipped linkify's `fuzzyLink` default from true to false, so
+  // a bare domain stopped becoming a link. wiki.js runs with linkify: true and
+  // the old default, and it/home relies on it ("posta chiocciola davidepalma.it"
+  // renders as a link today). Restore the behaviour rather than lose a link.
+  if (core.linkify) {
+    md.linkify.set({ fuzzyLink: true })
+  }
+
+  // markdownCore itself. wiki.js also loads markdown-it-decorate here; we do not
+  // -- see the note in src/content.mjs. markdown-it-attrs covers the same
+  // {.class} need, and does it behind an attribute allowlist.
   md.use(mdAttrs, { allowedAttributes: ['id', 'class', 'target'] })
-  md.use(mdDecorate)
 
   // Child renderers.
   md.use(mdAbbr)

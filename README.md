@@ -41,7 +41,17 @@ match — tabsets, kroki fences, footnotes, KaTeX (including mhchem), task lists
 twemoji, `{.is-info}` attributes and heading anchors. Because heading anchors are
 generated with the same `uslug` algorithm, existing `#anchor` links keep working.
 
-This is the objective check the earlier attempt never had.
+This is the objective check the earlier attempt never had, and it is what makes
+it safe to run current dependency versions rather than freezing them: a bump that
+changes rendering fails here.
+
+Three differences are normalised, each for a stated reason. wiki.js runs its
+output through DOMPurify, whose MathML allow-list strips KaTeX's
+`<semantics>`/`<annotation>` wrapper — we keep it, because it carries the
+original LaTeX for screen readers. Kroki URLs embed a zlib stream whose bytes
+vary by zlib build, so they are compared by decoded meaning. And KaTeX's
+`.katex-html` subtree is presentation, regenerated per release from the same
+parse the MathML describes; the MathML itself is compared in full.
 
 ## Layout
 
@@ -143,6 +153,23 @@ publishes the image. The Pi polls for it.
 - `it/test` has four hand-written footnote anchors (`#fn1`, `#fn2`, `#fnref1`,
   `#fnref2`) pointing at IDs nothing generates, because the page uses a manual
   list rather than footnote syntax.
+
+## Dependencies
+
+Everything is kept current. Rendering parity is protected by `npm run parity`,
+which compares every page against wiki.js's own stored output — so an upgrade
+that changes rendering fails CI instead of shipping quietly.
+
+Three upgrades have changed rendering so far, and each was decided on its merits
+rather than pinned away:
+
+| Change | Decision |
+|---|---|
+| markdown-it 12 flipped `fuzzyLink` to `false`, dropping a link on `it/home` | restored in `src/markdown/pipeline.mjs` |
+| markdown-it-attrs 5 moved trailing `{.is-info}` onto the inner paragraph, breaking blockquote styling | restored in `src/postprocess/blockquotes.mjs` |
+| KaTeX 0.18 fixed mhchem, so `$\ce{...}$` renders instead of printing `\ce` | accepted; recorded as an intended difference |
+
+That last one means the new site is *more* correct than the wiki on `it/test`.
 
 ## Deliberately not ported
 
