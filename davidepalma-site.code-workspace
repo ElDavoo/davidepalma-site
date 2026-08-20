@@ -1,0 +1,27 @@
+{
+  "//": "Multi-root workspace: the generator plus both content repositories, so both trees are watched and editable in one window.",
+  "folders": [
+    { "name": "site (generator)", "path": "." },
+    { "name": "content — public", "path": "../wikijs-content" },
+    { "name": "content — private", "path": "../wiki-content-private" }
+  ],
+  "settings": {
+    "files.eol": "\n",
+    "files.trimTrailingWhitespace": false,
+    "[markdown]": {
+      "editor.wordWrap": "on",
+      "editor.quickSuggestions": { "comments": "off", "strings": "off", "other": "off" }
+    },
+    "search.exclude": {
+      "**/_site": true,
+      "**/dist": true,
+      "**/.cache": true,
+      "**/node_modules": true,
+      "**/export/fixtures": true
+    },
+    "files.associations": { "*.11ty.js": "javascript" }
+  },
+  "extensions": {
+    "recommendations": ["ms-vscode.live-server"]
+  }
+}

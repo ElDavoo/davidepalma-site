@@ -1,0 +1,10 @@
+{
+  "files.eol": "\n",
+  "files.associations": { "*.11ty.js": "javascript" },
+  "search.exclude": {
+    "_site": true,
+    "dist": true,
+    ".cache": true,
+    "export/fixtures": true
+  }
+}

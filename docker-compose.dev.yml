@@ -1,0 +1,25 @@
+# Local Kroki, for authoring offline and for rendering mermaid.
+#
+# kroki.io's public mermaid backend is unreliable (it currently answers 500), so
+# a local instance is the difference between diagrams rendering and falling back
+# to their source. CI runs the same two images as service containers.
+#
+#   docker compose -f docker-compose.dev.yml up -d
+#   KROKI_SERVER=http://localhost:8000 npm run dev
+services:
+  kroki:
+    image: yuzutech/kroki:latest
+    environment:
+      KROKI_MERMAID_HOST: mermaid
+      KROKI_MERMAID_PORT: 8002
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mermaid
+
+  # Kroki renders graphviz, plantuml and bytefield itself; mermaid needs a
+  # companion because it runs a headless browser.
+  mermaid:
+    image: yuzutech/kroki-mermaid:latest
+    expose:
+      - "8002"
