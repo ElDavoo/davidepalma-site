@@ -1,5 +1,6 @@
 /** Per-locale 404 body, served by the Go server. */
 import { layout, escapeHtml } from '../../templates/layout.mjs'
+import { treesFor } from '../tree.mjs'
 
 export const data = {
   pagination: { data: 'wiki.locales', size: 1, alias: 'locale' },
@@ -16,7 +17,7 @@ export function render (data) {
     localeNames: data.wiki.localeNames,
     title: t.notFoundTitle,
     noindex: true,
-    trees: data.wiki.trees[locale],
+    trees: treesFor('public', data.wiki.trees[locale]),
     translations: {},
     devBanner: data.wiki.isDev,
     content: `<h1>${escapeHtml(t.notFoundTitle)}</h1><p>${escapeHtml(t.notFoundBody)}</p>

@@ -50,6 +50,22 @@ export function buildTree (pages) {
   return toArray(root).children
 }
 
+/**
+ * Pick the trees a page rendered at `tier` may show.
+ *
+ * The sidebar lists page titles and URLs, so rendering another tier's tree
+ * publishes exactly what that tier exists to withhold. Each page therefore sees
+ * only its own tier: a public page cannot reveal that private pages exist, and a
+ * private page cannot reveal the secret ones.
+ *
+ * Unlisted pages fall back to the public tree -- they are reachable without
+ * credentials, so anything else would be visible to a link-holder.
+ */
+export function treesFor (tier, trees) {
+  const visible = tier === 'unlisted' ? 'public' : (tier || 'public')
+  return trees[visible] ? { [visible]: trees[visible] } : {}
+}
+
 /** Group pages into a tree per tier, ready for the sidebar. */
 export function treesByTier (pages, locale) {
   const trees = {}

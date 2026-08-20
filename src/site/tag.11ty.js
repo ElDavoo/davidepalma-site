@@ -1,5 +1,6 @@
 /** /{locale}/t/{tag} — public pages carrying one tag. */
 import { layout, escapeHtml } from '../../templates/layout.mjs'
+import { treesFor } from '../tree.mjs'
 
 export const data = {
   pagination: { data: 'wiki.tagPages', size: 1, alias: 'entry' },
@@ -24,7 +25,7 @@ export function render (data) {
     locale,
     localeNames: data.wiki.localeNames,
     title: `${t.taggedWith} “${tag}”`,
-    trees: data.wiki.trees[locale],
+    trees: treesFor('public', data.wiki.trees[locale]),
     translations: {},
     devBanner: data.wiki.isDev,
     content: `<h1>${escapeHtml(t.taggedWith)} “${escapeHtml(tag)}”</h1><ul>${list}</ul>

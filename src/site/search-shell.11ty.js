@@ -7,6 +7,7 @@
  * the site -- and keeps the server free of HTML templating.
  */
 import { layout } from '../../templates/layout.mjs'
+import { treesFor } from '../tree.mjs'
 
 export const data = {
   pagination: { data: 'wiki.locales', size: 1, alias: 'locale' },
@@ -24,7 +25,8 @@ export function render (data) {
     title: t.searchResults,
     noindex: true,
     query: '{{QUERY}}',
-    trees: data.wiki.trees[locale],
+    // The search page is served to anyone, so it gets the public tree only.
+    trees: treesFor('public', data.wiki.trees[locale]),
     translations: Object.fromEntries(data.wiki.locales.filter(l => l !== locale).map(l => [l, `/search?lang=${l}&q={{QUERY_ESCAPED}}`])),
     devBanner: data.wiki.isDev,
     content: '{{RESULTS}}'
